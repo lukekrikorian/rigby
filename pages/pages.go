@@ -69,7 +69,7 @@ func StaticPost(w http.ResponseWriter, r *http.Request) {
 	post, err := db.GetPost(postID)
 	if err == nil {
 		postString := fmt.Sprintf("%s by %s\n\n%s", post.Title, post.Author, post.Body)
-		w.Header().Set("Content-Type", "text/plain")
+		w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 		w.Write([]byte(postString))
 	} else {
 		fmt.Println(err)

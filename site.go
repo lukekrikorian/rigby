@@ -21,7 +21,7 @@ func main() {
 
 	config.Init()
 
-	url := fmt.Sprintf("%s:%s@/%s",
+	url := fmt.Sprintf("%s:%s@/%s?charset=utf8mb4",
 		config.Config.Database.Username,
 		config.Config.Database.Password,
 		config.Config.Database.Database)
