@@ -15,7 +15,8 @@ type Configuration struct {
 		Database string
 	}
 	Server struct {
-		Port int32
+		Port   int32
+		Origin string
 	}
 }
 

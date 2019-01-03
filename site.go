@@ -13,6 +13,7 @@ import (
 	"site/pages"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -46,12 +47,14 @@ func main() {
 	r.HandleFunc("/api/comments", api.CreateComment).Methods("POST")
 	r.HandleFunc("/api/replies", api.CreateReply).Methods("POST")
 
+	options := handlers.AllowedOrigins([]string{"localhost", config.Config.Server.Origin})
+
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.Config.Server.Port),
 		WriteTimeout: time.Second * 10,
 		ReadTimeout:  time.Second * 10,
 		IdleTimeout:  time.Second * 30,
-		Handler:      r,
+		Handler:      handlers.CORS(options)(r),
 	}
 	err := srv.ListenAndServe()
 	log.Fatal(err)

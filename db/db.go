@@ -65,7 +65,7 @@ type Reply struct {
 
 // Init initializes and checks the DB connection for errors
 func Init(url string) {
-	DB, _ := sqlx.Open("mysql", url)
+	DB, _ = sqlx.Open("mysql", url)
 	if DB.Ping() != nil {
 		log.Fatal("Error connecting to database")
 	}
@@ -123,7 +123,7 @@ func (p *Post) Create() (Error error) {
 	user, Error := GetUserByID(p.UserID)
 	if Error == nil {
 		p.Author = user.Username
-		q := "INSERT INTO posts VALUES (:postID, :userID, :author, :title, :body, :gamerRage, :votes, NOW())"
+		q := "INSERT INTO posts VALUES (:id, :userID, :author, :title, :body, :gamerRage, :votes, NOW())"
 		_, Error = DB.NamedExec(q, p)
 	}
 	return
