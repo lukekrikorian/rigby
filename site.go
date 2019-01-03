@@ -58,7 +58,16 @@ func main() {
 		IdleTimeout:  time.Second * 30,
 		Handler:      handlers.CORS(options)(r),
 	}
-	err := srv.ListenAndServe()
+
+	var err error
+	if config.Config.Server.Port == 443 {
+		go func() {
+			http.ListenAndServe(":80", http.HandlerFunc(redirectTLS))
+		}()
+		srv.ListenAndServeTLS(config.Config.HTTPS.Certificate, config.Config.HTTPS.Key)
+	} else {
+		srv.ListenAndServe()
+	}
 	log.Fatal(err)
 }
 
@@ -70,4 +79,9 @@ func removeDirectories(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func redirectTLS(w http.ResponseWriter, r *http.Request) {
+	redirectURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
+	http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
 }

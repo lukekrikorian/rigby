@@ -18,6 +18,10 @@ type Configuration struct {
 		Port   int32
 		Origin string
 	}
+	HTTPS struct {
+		Certificate string
+		Key         string
+	} `json:"https"`
 }
 
 // Config is the actual config data
