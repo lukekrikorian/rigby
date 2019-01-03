@@ -4,11 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"site/db"
 	"strings"
 
 	uuid "github.com/satori/go.uuid"
 )
+
+var signupRegex = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 
 type signupJSON struct {
 	Username string
@@ -37,6 +40,11 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := db.GetUserByUsername(signup.Username); err == nil {
 		http.Error(w, "A user with that username already exists", 500)
+		return
+	}
+
+	if !signupRegex.MatchString(signup.Username) {
+		http.Error(w, "Usernames can only contain numbers, letters, and underscores", 500)
 		return
 	}
 
