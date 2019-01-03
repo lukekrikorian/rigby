@@ -85,6 +85,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Incorrect login", 500)
 }
 
+// Logout logs a user out
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("session")
+
+	if cookie == nil || err != nil {
+		http.Error(w, "Error signing out", 500)
+		return
+	}
+
+	if _, ok := db.Sessions[cookie.Value]; ok {
+		delete(db.Sessions, cookie.Value)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
+
 // CreateComment is the endpoint /api/comments with the method POST
 func CreateComment(w http.ResponseWriter, r *http.Request) {
 	userID, err := db.CheckAuth(r)

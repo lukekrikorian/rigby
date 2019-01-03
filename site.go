@@ -32,6 +32,8 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", removeDirectories(fileServer)))
 
+	r.HandleFunc("/logout", api.Logout).Methods("GET")
+
 	r.HandleFunc("/", pages.Index).Methods("GET")
 	r.HandleFunc("/~{username}", pages.Profile).Methods("GET")
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
