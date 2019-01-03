@@ -1,0 +1,33 @@
+{{ define "posts" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" .Title }}
+	<body>
+		{{ template "header" . }}
+		<div class="centerWrap">
+			<div class="center {{ if .GamerRage }} gamerRage {{- end -}}">
+				<h3>{{ .Title }}</h3>
+				<p>By <a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+				<pre>{{ .Body }}</pre>
+				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end -}}
+				<div class="comments">
+				{{ range .Comments }}
+					<div class="comment" id="{{ .ID }}">
+						<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+						<p class="commentBody">{{ .Body }}</p>
+						{{ range .Replies }}
+							<div class="reply">
+								<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+								<p class="replyBody">{{ .Body }}</p>
+							</div>
+						{{ end }}
+						<a class="replyLink" href="/reply/{{ .ID }}">reply</a>
+					</div>
+				{{ end }}
+				<a href="/comment/{{ .ID }}" id="postCommentLink">post a new comment</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+{{ end }}

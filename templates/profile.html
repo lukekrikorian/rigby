@@ -1,0 +1,20 @@
+{{ define "profile" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" .Username }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+			<div class="center">
+				<h3>{{ .Username }}</h3>
+				<p id="dateJoined">joined on {{ printf "%.10s" .Created }}</p>
+				{{ if .Posts }}<h4>posts</h4>{{- end -}}
+				{{ range .Posts }}
+				<a href="/posts/{{ .ID }}">{{ .Title }}</a>
+				<br>
+				{{ end }}
+			</div>
+		</div>
+	</body>
+</html>
+{{ end }}

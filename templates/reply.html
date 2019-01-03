@@ -1,0 +1,20 @@
+{{ define "reply" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" "reply..!" }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+				<div class="center">
+					<p>replying to <a href="~/{{ .Author }}">{{ .Author }}</a>'s <a href="/posts/{{ .PostID }}#{{ .ID }}">comment</a></p>
+					<form method="POST" action="/api/replies" parentid="{{ .ID }}">
+						<input type="textarea" name="body" placeholder="Post a comment"/>
+						<input type="submit" value="Submit"/>
+						<p id="errorText"></p>
+					</form>
+				</div>
+			</div>
+			<script src="/static/form.js"></script>
+	</body>
+</html>
+{{ end }}

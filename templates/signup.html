@@ -1,0 +1,23 @@
+{{ define "signup" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" "sign up for rigby" }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+			<div class="center">
+				<p>sign up for rigby</p>
+				<form method="POST" action="/api/signup">
+					<input type="text" maxlength="16" minlength="3" name="username" placeholder="Username"/>
+					<br>
+					<input type="password" minLength="5" maxLength="50" name="password" placeholder="Password"/>
+					<br>
+					<input type="submit" value="Submit"/>
+					<p id="errorText"></p>
+				</form>
+			</div>
+		</div>
+		<script src="/static/form.js"></script>
+	</body>
+</html>
+{{ end }}

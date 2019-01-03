@@ -1,0 +1,15 @@
+{{ define "browse" }}
+<html>
+	{{ template "head" "browsin" }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+			<div class="center">
+				{{ range . }}
+					<p class="recentPost"><a href="/posts/{{ .ID }}">{{ .Title }}</a> by <a href="/~{{ .Author }}">{{ .Author }}</a></p>
+				{{ end }}
+			</div>
+		</div>
+	</body>
+</html>
+{{ end }}

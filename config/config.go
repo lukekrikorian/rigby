@@ -1,0 +1,43 @@
+package config
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+)
+
+// Configuration structure for the project
+type Configuration struct {
+	Database struct {
+		Username string
+		Password string
+		Database string
+	}
+	Server struct {
+		Port int32
+	}
+}
+
+// Config is the actual config data
+var Config Configuration
+
+// Init fetches the file data and decodes it, setting up the config
+func Init() {
+	configFile, err := os.Open("config.json")
+	if err != nil {
+		log.Fatal("Error opening config.json file. Does it exist?")
+		configFile.Close()
+		return
+	}
+
+	defer configFile.Close()
+
+	jsonParser := json.NewDecoder(configFile)
+	err = jsonParser.Decode(&Config)
+	if err != nil {
+		log.Fatal("Error parsing json in config file.")
+	}
+
+	fmt.Println("Parsed config file")
+}

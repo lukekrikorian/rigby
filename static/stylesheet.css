@@ -1,0 +1,137 @@
+body {
+	font-family: monospace;
+}
+
+#border {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 5px;
+	width: 100%;
+	overflow: hidden;
+	background: #662113;
+}
+
+#headerLink {
+	display: block;
+	width: 6em;
+	font-size: 1.3em;
+	color: #662113;
+	font-weight: bold;
+	text-decoration: none;
+	margin-top: 15px;
+}
+
+form > label {
+	vertical-align: 4px;
+}
+
+form > input[type=text], form > input[type=password] {
+	margin-bottom: 5px;
+	border: 1px solid darkgray;
+	padding: 4px;
+	border-radius: 2px;
+	box-shadow: none;
+	-webkit-appearance: none;
+}
+
+form > textarea {
+	width: 24em;
+	height: 14em;
+	margin-bottom: 3px;
+	padding: 5px;
+	max-width: 700px;
+}
+
+form > input[type=submit] {
+	margin-top: 5px;
+}
+
+pre {
+	white-space: pre-wrap;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.center {
+	display: inline-block;
+	max-width: 700px;
+	display: inline-block;
+	text-align: left;
+}
+
+.centerWrap {
+	text-align: center;
+}
+
+.centerWrap:first-child {
+	text-align: left;
+}
+
+.dark {
+	color: #2F2F2F;
+}
+
+/* 
+	On the recent posts page, we want the links to be a more compact
+	than normal. 
+*/
+.recentPost {
+	margin: 5px;
+}
+
+#commentsHeader {
+	display: block;
+	margin-top: 30px;
+}
+
+#postCommentLink {
+	display: block;
+	margin-top: 14px;
+}
+
+.comment {
+	margin-left: 5px;
+}
+
+.reply {
+	margin-left: 24px;
+}
+
+.replyLink {
+	display: block;
+	margin-top: 5px;
+}
+
+.commentBody, .replyBody {
+	margin-top: -7px;
+	margin-bottom: 2px;
+}
+
+.reply a {
+	color: #27259b;
+}
+
+.gamerRage {
+	animation: shake 0.2s infinite;
+}
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}

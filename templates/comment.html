@@ -1,0 +1,20 @@
+{{ define "comment" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" "post a comment" }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+			<div class="center">
+				<p>replying to <a href="/posts/{{ .ID }}">{{ .Title }}</a></p>
+				<form method="POST" action="/api/comments" postid="{{ .ID }}">
+					<input type="textarea" name="body" placeholder="Post a comment"/>
+					<input type="submit" value="Submit"/>
+					<p id="errorText"></p>
+				</form>
+			</div>
+		</div>
+		<script src="/static/form.js"></script>
+	</body>
+</html>
+{{ end }} 
