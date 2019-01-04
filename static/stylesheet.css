@@ -2,6 +2,7 @@ body {
 	font-family: monospace;
 }
 
+/* Header */
 #border {
 	position: absolute;
 	top: 0;
@@ -22,6 +23,7 @@ body {
 	margin-top: 15px;
 }
 
+/* Generic Elements */
 form > label {
 	vertical-align: 4px;
 }
@@ -59,6 +61,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+h2, h3 {
+	margin-bottom: 5px;
+}
+
 .center {
 	display: inline-block;
 	max-width: 700px;
@@ -78,14 +84,7 @@ a:hover {
 	color: #2F2F2F;
 }
 
-/* 
-	On the recent posts page, we want the links to be a more compact
-	than normal. 
-*/
-.recentPost {
-	margin: 5px;
-}
-
+/* Comments and Replies */
 #commentsHeader {
 	display: block;
 	margin-top: 30px;
@@ -117,6 +116,17 @@ a:hover {
 .reply a {
 	color: #27259b;
 }
+
+/* Misc */
+#indexDescription {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.recentPost {
+	margin: 5px;
+}
+
 
 .gamerRage {
 	animation: shake 0.2s infinite;

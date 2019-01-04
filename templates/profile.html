@@ -6,9 +6,9 @@
 		{{ template "header" }}
 		<div class="centerWrap">
 			<div class="center">
-				<h3>{{ .Username }}</h3>
-				<p id="dateJoined">joined on {{ printf "%.10s" .Created }}</p>
-				{{ if .Posts }}<h4>posts</h4>{{- end -}}
+				<h2>{{ .Username }}</h2>
+				<p id="dateJoined" style="margin-top: 5px">joined on {{ printf "%.10s" .Created }}</p>
+				{{ if .Posts }}<h3>Posts</h3>{{- end -}}
 				{{ range .Posts }}
 				<a href="/posts/{{ .ID }}">{{ .Title }}</a>
 				<br>
