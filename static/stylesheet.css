@@ -129,7 +129,7 @@ h2, h3 {
 
 
 .gamerRage {
-	animation: shake 0.2s infinite;
+	animation: 0.2s shake 10;
 }
 
 @keyframes shake {
