@@ -18,7 +18,7 @@ type signupJSON struct {
 	Password string
 }
 
-// Signup creates an account
+// Signup endpoint (/api/signup POST)
 func Signup(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var signup signupJSON
@@ -63,7 +63,7 @@ type loginJSON struct {
 	Password string
 }
 
-// Login checks for valid logins
+// Login endpoint (/api/login POST)
 func Login(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
@@ -93,7 +93,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Incorrect login", 500)
 }
 
-// Logout logs a user out
+// Logout endpoint (/logout GET)
 func Logout(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 
@@ -108,7 +108,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// CreateComment is the endpoint /api/comments with the method POST
+// CreateComment endpoint (/api/comments POST)
 func CreateComment(w http.ResponseWriter, r *http.Request) {
 	userID, err := db.CheckAuth(r)
 	if err != nil {
@@ -142,7 +142,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "/posts/%s", comment.PostID)
 }
 
-// CreateReply is the enpoint /api/replies with the method POST
+// CreateReply endpoint (/api/replies POST)
 func CreateReply(w http.ResponseWriter, r *http.Request) {
 	userID, err := db.CheckAuth(r)
 	if err != nil {
@@ -182,7 +182,7 @@ func CreateReply(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// CreatePost handles creation of posts
+// CreatePost endpoint (/api/post POST)
 func CreatePost(w http.ResponseWriter, r *http.Request) {
 	userID, err := db.CheckAuth(r)
 	if err != nil {

@@ -7,20 +7,20 @@ import (
 
 	"github.com/satori/go.uuid"
 
-	// We need this for sqlx
+	// Needed for sqlx
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-// DB is the database connection
+// DB is the database connection itself
 var DB *sqlx.DB
 
-// Sessions is user login sessions tokens
+// Sessions is user session tokens: token -> userID
 var Sessions = make(map[string]string)
 
-// User represents a user in the database
+// User representation
 type User struct {
 	ID       string
 	Username string
@@ -29,7 +29,7 @@ type User struct {
 	Posts    []Post
 }
 
-// Post represents a post in the database
+// Post representation
 type Post struct {
 	ID        string `db:"id"`
 	GamerRage bool   `db:"gamerRage"`
@@ -42,7 +42,7 @@ type Post struct {
 	Comments  []Comment
 }
 
-// Comment represents a top-level comment
+// Comment representation
 type Comment struct {
 	ID      string `db:"id"`
 	UserID  string `db:"userID"`
@@ -53,7 +53,7 @@ type Comment struct {
 	Replies []Reply
 }
 
-// Reply represents a reply to a comment
+// Reply representation
 type Reply struct {
 	ParentID string `db:"parentID" json:"parentid"`
 	ID       string `db:"id"`
@@ -71,7 +71,7 @@ func Init(url string) {
 	}
 }
 
-// CheckAuth checks whether a user is logged in
+// CheckAuth validates a request session
 func CheckAuth(r *http.Request) (UserID string, Error error) {
 	sessionCookie, Error := r.Cookie("session")
 	if sessionCookie == nil || Error != nil {
@@ -83,7 +83,7 @@ func CheckAuth(r *http.Request) (UserID string, Error error) {
 	return "", errors.New("User cookie incorrect")
 }
 
-// CheckLogin checks a user's credentials and returns the user
+// CheckLogin validates a login, comparing the two hashes
 func CheckLogin(username, password string) (User User, Error error) {
 	var hash string
 	if Error = DB.Get(&hash, "SELECT password FROM users WHERE username = ?", username); Error == nil {
@@ -96,7 +96,7 @@ func CheckLogin(username, password string) (User User, Error error) {
 	return
 }
 
-// CreateUser adds a user to the DB
+// CreateUser saves a new user profile
 func CreateUser(username, password string) (Error error) {
 	id := uuid.Must(uuid.NewV4())
 	if password, Error = HashPassword(password); Error == nil {
@@ -117,7 +117,7 @@ func GetUserByUsername(username string) (User User, Error error) {
 	return
 }
 
-// Create adds a post to the posts database table
+// Create saves a post
 func (p *Post) Create() (Error error) {
 	p.ID = uuid.Must(uuid.NewV4()).String()
 	user, Error := GetUserByID(p.UserID)
@@ -129,7 +129,7 @@ func (p *Post) Create() (Error error) {
 	return
 }
 
-// Create adds a comment to the database
+// Create saves a comment
 func (c *Comment) Create() (Error error) {
 	c.ID = uuid.Must(uuid.NewV4()).String()
 
@@ -141,7 +141,7 @@ func (c *Comment) Create() (Error error) {
 	return
 }
 
-// Create adds a reply to the database
+// Create saves a reply
 func (r *Reply) Create() (Error error) {
 	r.ID = uuid.Must(uuid.NewV4()).String()
 

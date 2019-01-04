@@ -14,7 +14,7 @@ var templates = template.Must(template.ParseGlob("templates/*"))
 // NotFound is the 404 page page
 var NotFound = templates.Lookup("404")
 
-// Profile is a user's profile page
+// Profile page
 func Profile(w http.ResponseWriter, r *http.Request) {
 	username := mux.Vars(r)["username"]
 	user, err := db.GetUserByUsername(username)
@@ -34,7 +34,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "profile", user)
 }
 
-// Index is the index page
+// Index page
 func Index(w http.ResponseWriter, r *http.Request) {
 	if userID, err := db.CheckAuth(r); err == nil {
 		if userInfo, err := db.GetUserByID(userID); err == nil {
@@ -45,7 +45,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "/", nil)
 }
 
-// Post is the page for a post
+// Post page
 func Post(w http.ResponseWriter, r *http.Request) {
 	postID := mux.Vars(r)["post"]
 	post, err := db.GetPost(postID)
@@ -77,7 +77,7 @@ func StaticPost(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Comment handles post comments
+// Comment creation page
 func Comment(w http.ResponseWriter, r *http.Request) {
 	postID := mux.Vars(r)["post"]
 	post, err := db.GetPost(postID)
@@ -88,7 +88,7 @@ func Comment(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Reply handles comment replies
+// Reply creation page
 func Reply(w http.ResponseWriter, r *http.Request) {
 	parentID := mux.Vars(r)["comment"]
 	parent, err := db.GetComment(parentID)
@@ -109,13 +109,12 @@ func Pages(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Recent is the most recent posts
+// Recent posts page
 func Recent(w http.ResponseWriter, r *http.Request) {
 	posts, err := db.GetRecentPosts()
 	if err != nil {
 		NotFound.Execute(w, nil)
 		return
 	}
-
 	templates.ExecuteTemplate(w, "browse", posts)
 }
