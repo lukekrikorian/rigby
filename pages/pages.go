@@ -137,5 +137,5 @@ func Conversation(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	templates.ExecuteTemplate(w, "commentsList", comments)
+	templates.ExecuteTemplate(w, "conversation", comments)
 }
