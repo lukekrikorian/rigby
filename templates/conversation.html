@@ -1,0 +1,26 @@
+{{ define "commentsList" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" "People Talkin" }}
+	<body>
+		{{ template "header" }}
+		<div class="centerWrap">
+				<div class="center">
+					<h2>People Talkin</h2>
+					{{ range . }}
+						<div class="linkList comment">
+							<p><a href="/~{{ .Author }}">{{ .Author }}</a> on <a href="/posts/{{ .PostID }}#{{ .ID }}">{{ .Parent.Title }}</a></p>
+							<p class="commentBody">{{ .Body }}</p>
+						</div>
+						{{ range .Replies }}
+							<div class="reply">
+								<p class="replyLink"><a href="{{ .Author }}">{{ .Author }}</a></p>
+								<p class="replyBody">{{ .Body }}</p>
+							</div>
+						{{ end }}
+					{{ end }}
+				</div>
+			</div>
+	</body>
+</html>
+{{ end }}

@@ -1,4 +1,4 @@
-{{ define "browse" }}
+{{ define "postsList" }}
 <html>
 	{{ template "head" "browsin" }}
 	<body>
@@ -7,7 +7,7 @@
 			<div class="center">
 				<h2>Browsin</h2>
 				{{ range . }}
-					<p class="recentPost"><a href="/posts/{{ .ID }}">{{ .Title }}</a> by <a href="/~{{ .Author }}">{{ .Author }}</a></p>
+					<p class="linkList"><a href="/posts/{{ .ID }}">{{ .Title }}</a> by <a href="/~{{ .Author }}">{{ .Author }}</a></p>
 				{{ end }}
 			</div>
 		</div>

@@ -41,6 +41,7 @@ func main() {
 	r.HandleFunc("/comment/{post}", pages.Comment).Methods("GET")
 	r.HandleFunc("/reply/{comment}", pages.Reply).Methods("GET")
 	r.HandleFunc("/browse/recent", pages.Recent).Methods("GET")
+	r.HandleFunc("/conversation", pages.Conversation).Methods("GET")
 	r.HandleFunc("/{page}", pages.Pages).Methods("GET")
 
 	r.HandleFunc("/api/signup", api.Signup).Methods("POST")

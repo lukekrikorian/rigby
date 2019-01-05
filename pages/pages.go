@@ -116,5 +116,26 @@ func Recent(w http.ResponseWriter, r *http.Request) {
 		NotFound.Execute(w, nil)
 		return
 	}
-	templates.ExecuteTemplate(w, "browse", posts)
+	templates.ExecuteTemplate(w, "postsList", posts)
+}
+
+// Conversation page
+func Conversation(w http.ResponseWriter, r *http.Request) {
+	comments, err := db.GetRecentComments()
+	if err != nil {
+		fmt.Println(err)
+		NotFound.Execute(w, nil)
+		return
+	}
+
+	for i := range comments {
+		if err := comments[i].GetParent(); err != nil {
+			fmt.Println(err)
+		}
+		if err = comments[i].GetReplies(); err != nil {
+			fmt.Println(err)
+		}
+	}
+
+	templates.ExecuteTemplate(w, "commentsList", comments)
 }

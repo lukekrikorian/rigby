@@ -51,6 +51,7 @@ type Comment struct {
 	PostID  string `db:"postID" json:"postid"`
 	Created string
 	Replies []Reply
+	Parent  Post
 }
 
 // Reply representation
@@ -167,7 +168,13 @@ func GetComment(ID string) (Comment Comment, Error error) {
 
 // GetRecentPosts returns a list of recent posts
 func GetRecentPosts() (Posts []Post, Error error) {
-	Error = DB.Select(&Posts, "SELECT * FROM posts ORDER BY created DESC LIMIT 25")
+	Error = DB.Select(&Posts, "SELECT * FROM posts ORDER BY created DESC LIMIT 50")
+	return
+}
+
+// GetRecentComments returns a list of recent comments
+func GetRecentComments() (Comments []Comment, Error error) {
+	Error = DB.Select(&Comments, "SELECT * FROM comments ORDER BY created DESC LIMIT 50")
 	return
 }
 
@@ -186,6 +193,12 @@ func (p *Post) GetComments() (Error error) {
 // GetReplies populates a list of replies to a comment
 func (c *Comment) GetReplies() (Error error) {
 	Error = DB.Select(&c.Replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", c.ID)
+	return
+}
+
+// GetParent populates a comment's parent post data
+func (c *Comment) GetParent() (Error error) {
+	Error = DB.Get(&c.Parent, "SELECT * FROM posts WHERE id = ?", c.PostID)
 	return
 }
 

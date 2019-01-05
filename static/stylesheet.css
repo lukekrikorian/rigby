@@ -123,10 +123,9 @@ h2, h3 {
 	margin-bottom: 5px;
 }
 
-.recentPost {
-	margin: 5px;
+.linkList {
+	margin: 6px;
 }
-
 
 .gamerRage {
 	animation: 0.2s shake 10;
