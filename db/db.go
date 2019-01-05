@@ -64,6 +64,12 @@ type Reply struct {
 	Created  string
 }
 
+// Vote representation
+type Vote struct {
+	UserID string `db:"userID"`
+	PostID string `db:"postID"`
+}
+
 // Init initializes and checks the DB connection for errors
 func Init(url string) {
 	DB, _ = sqlx.Open("mysql", url)
@@ -152,6 +158,33 @@ func (r *Reply) Create() (Error error) {
 	q := "INSERT INTO replies VALUES (:id, :parentID, :userID, :author, :body, NOW())"
 	_, Error = DB.NamedExec(q, r)
 	return
+}
+
+// Create saves a vote
+func (v *Vote) Create() (CurrentVotes int32, Error error) {
+	Error = DB.Get(&CurrentVotes, "SELECT votes FROM posts WHERE id = ?", v.PostID)
+	if Error == nil {
+		insertQuery := "INSERT INTO votes VALUES (:userID, :postID)"
+		if _, Error = DB.NamedExec(insertQuery, v); Error == nil {
+			CurrentVotes++
+			updateQuery := "UPDATE posts SET votes = ? WHERE id = ?"
+			if _, Error = DB.Exec(updateQuery, CurrentVotes, v.PostID); Error == nil {
+				return CurrentVotes, Error
+			}
+		}
+	}
+	return 0, Error
+}
+
+// Exists checks if a post has already been saved
+func (v *Vote) Exists() (Exists bool) {
+	var userID string
+	q := "SELECT userID FROM votes WHERE userID = ? AND postID = ? LIMIT 1"
+
+	if err := DB.Get(&userID, q, v.UserID, v.PostID); err == nil {
+		return true
+	}
+	return false
 }
 
 // GetPost returns a post based on the post's ID

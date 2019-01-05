@@ -81,8 +81,17 @@ h2, h3 {
 	text-align: left;
 }
 
+/* Generic class stylings */
 .dark {
 	color: #2F2F2F;
+}
+
+.inline {
+	display: inline-block;
+}
+
+.floatRight {
+	float: right;
 }
 
 /* Comments and Replies */
@@ -122,6 +131,11 @@ h2, h3 {
 #indexDescription {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+#authorLink {
+	margin-right: 10px;
+	margin-bottom: 0px;
 }
 
 .linkList {

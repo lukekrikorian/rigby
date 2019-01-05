@@ -49,6 +49,7 @@ func main() {
 	r.HandleFunc("/api/post", api.CreatePost).Methods("POST")
 	r.HandleFunc("/api/comments", api.CreateComment).Methods("POST")
 	r.HandleFunc("/api/replies", api.CreateReply).Methods("POST")
+	r.HandleFunc("/api/vote/{post}", api.Vote).Methods("POST")
 
 	options := handlers.AllowedOrigins([]string{"localhost", config.Config.Server.Origin})
 

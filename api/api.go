@@ -8,6 +8,8 @@ import (
 	"site/db"
 	"strings"
 
+	"github.com/gorilla/mux"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -219,4 +221,31 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusSeeOther)
 	fmt.Fprintf(w, "/posts/%s", post.ID)
+}
+
+// Vote endpoint (/api/vote/{post} POST)
+func Vote(w http.ResponseWriter, r *http.Request) {
+	postID := mux.Vars(r)["post"]
+	userID, err := db.CheckAuth(r)
+	if err != nil {
+		http.Error(w, "You aren't logged in", 500)
+		return
+	}
+	vote := db.Vote{
+		UserID: userID,
+		PostID: postID,
+	}
+
+	if vote.Exists() {
+		http.Error(w, "You've already voted on that", 500)
+		return
+	}
+
+	votes, err := vote.Create()
+	if err == nil {
+		fmt.Fprintf(w, "%d", votes)
+	} else {
+		fmt.Println(err)
+		http.Error(w, "Error saving vote", 500)
+	}
 }
