@@ -11,8 +11,7 @@ echo "Pulling changes from origin on remote machine..."
 ssh -t root@rigby.space 'cd ~/rigby && git pull'
 echo "Changes pulled"
 echo "Restarting server..."
-ssh -t root@rigby.space 'cd ~/rigby && ./site > server.log &'
-echo "Server restarted"
+ssh root@rigby.space
 echo "Testing site"
 sleep 2s
 curl https://rigby.space/~luke

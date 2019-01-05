@@ -1,0 +1,20 @@
+{
+	"short_name": "Rigby",
+	"name": "Rigby",
+	"icons": [
+		{
+			"src": "/static/icon192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		}, 
+		{
+			"src": "/static/icon512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#f7f6e8",
+	"theme_color": "#f7f6e8",
+	"display": "standalone"
+}
