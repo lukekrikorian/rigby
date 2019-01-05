@@ -14,7 +14,7 @@
 						</div>
 						{{ range .Replies }}
 							<div class="reply">
-								<p class="replyLink"><a href="{{ .Author }}">{{ .Author }}</a></p>
+								<p class="replyLink"><a href="/~{{ .Author }}">{{ .Author }}</a></p>
 								<p class="replyBody">{{ .Body }}</p>
 							</div>
 						{{ end }}
