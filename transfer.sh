@@ -14,4 +14,4 @@ echo "Restarting server..."
 ssh root@rigby.space
 echo "Testing site"
 sleep 2s
-curl https://rigby.space/~luke
+curl rigby.space

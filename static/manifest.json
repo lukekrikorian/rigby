@@ -3,12 +3,12 @@
 	"name": "Rigby",
 	"icons": [
 		{
-			"src": "/static/icon192.png",
+			"src": "/static/images/icon192.png",
 			"type": "image/png",
 			"sizes": "192x192"
 		}, 
 		{
-			"src": "/static/icon512.png",
+			"src": "/static/images/icon512.png",
 			"type": "image/png",
 			"sizes": "512x512"
 		}
