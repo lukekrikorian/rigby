@@ -7,7 +7,7 @@
 			<div class="center">
 				<h2>Browsin</h2>
 				{{ range . }}
-					<p class="linkList"><span class="dark">↑{{ .Votes }}</span><a href="/posts/{{ .ID }}"> {{ .Title }}</a> by <a href="/~{{ .Author }}">{{ .Author }}</a></p>
+					<p class="linkList"><span class="dark">↑{{ .Votes }} </span><a href="/posts/{{ .ID }}">{{ .Title }}</a> by <a href="/~{{ .Author }}">{{ .Author }}</a></p>
 				{{ end }}
 			</div>
 		</div>
