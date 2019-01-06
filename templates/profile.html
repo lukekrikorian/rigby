@@ -10,7 +10,7 @@
 				<p id="dateJoined" style="margin-top: 5px">joined on {{ printf "%.10s" .Created }}</p>
 				{{ if .Posts }}<h3>Posts</h3>{{- end -}}
 				{{ range .Posts }}
-				<p class="linkList"><a href="/posts/{{ .ID }}">{{ .Title }}</a> <span class="floatRight dark">{{ .Votes }}↑</span></p>
+				<p class="linkList"><span class="dark">↑{{ .Votes }}</span><a href="/posts/{{ .ID }}"> {{ .Title }}</a> </p>
 				{{ end }}
 			</div>
 		</div>
