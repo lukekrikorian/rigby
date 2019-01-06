@@ -205,6 +205,12 @@ func GetRecentPosts() (Posts []Post, Error error) {
 	return
 }
 
+// GetPopularPosts returns a list of popular posts
+func GetPopularPosts() (Posts []Post, Error error) {
+	Error = DB.Select(&Posts, "SELECT * FROM posts ORDER BY votes DESC LIMIT 50")
+	return
+}
+
 // GetRecentComments returns a list of recent comments
 func GetRecentComments() (Comments []Comment, Error error) {
 	Error = DB.Select(&Comments, "SELECT * FROM comments ORDER BY created DESC LIMIT 50")

@@ -109,9 +109,22 @@ func Pages(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Recent posts page
-func Recent(w http.ResponseWriter, r *http.Request) {
-	posts, err := db.GetRecentPosts()
+// Browse posts, either popular or recent
+func Browse(w http.ResponseWriter, r *http.Request) {
+	page := mux.Vars(r)["page"]
+	var (
+		posts []db.Post
+		err   error
+	)
+	switch page {
+	case "recent":
+		posts, err = db.GetRecentPosts()
+	case "popular":
+		posts, err = db.GetPopularPosts()
+	default:
+		NotFound.Execute(w, nil)
+		return
+	}
 	if err != nil {
 		NotFound.Execute(w, nil)
 		return

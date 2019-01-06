@@ -92,6 +92,7 @@ h2, h3 {
 
 .floatRight {
 	float: right;
+	margin-left: 10px;
 }
 
 /* Comments and Replies */

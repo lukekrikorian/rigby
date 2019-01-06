@@ -40,7 +40,7 @@ func main() {
 	r.HandleFunc("/posts/{post}", pages.Post).Methods("GET")
 	r.HandleFunc("/comment/{post}", pages.Comment).Methods("GET")
 	r.HandleFunc("/reply/{comment}", pages.Reply).Methods("GET")
-	r.HandleFunc("/browse/recent", pages.Recent).Methods("GET")
+	r.HandleFunc("/browse/{page}", pages.Browse).Methods("GET")
 	r.HandleFunc("/conversation", pages.Conversation).Methods("GET")
 	r.HandleFunc("/{page}", pages.Pages).Methods("GET")
 
