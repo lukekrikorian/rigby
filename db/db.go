@@ -51,7 +51,7 @@ type Comment struct {
 	PostID  string `db:"postID" json:"postid"`
 	Created string
 	Replies []Reply
-	Parent  Post
+	Parent  *Post
 }
 
 // Reply representation
@@ -227,6 +227,13 @@ func (u *User) GetPosts() (Error error) {
 func (p *Post) GetComments() (Error error) {
 	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postID = ? ORDER BY created ASC", p.ID)
 	return
+}
+
+// GetCommentReplies populates the replies for each comment on a post
+func (p *Post) GetCommentReplies() {
+	for i, comment := range p.Comments {
+		DB.Select(&p.Comments[i].Replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", comment.ID)
+	}
 }
 
 // GetReplies populates a list of replies to a comment

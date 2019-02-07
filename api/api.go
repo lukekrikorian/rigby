@@ -250,3 +250,77 @@ func Vote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error saving vote", 500)
 	}
 }
+
+// Post endpoint (/api/posts/{post} GET)
+func Post(w http.ResponseWriter, r *http.Request) {
+	postID := mux.Vars(r)["post"]
+	post, err := db.GetPost(postID)
+	if err != nil {
+		http.Error(w, "Post not found", 404)
+		return
+	}
+
+	post.GetComments()
+	post.GetCommentReplies()
+
+	bytes, err := json.MarshalIndent(post, "", "\t")
+	if err != nil {
+		http.Error(w, "Error marshalling JSON", 500)
+		return
+	}
+
+	w.Write(bytes)
+}
+
+// Browse endpoint (/api/browse/(popular|recent) GET)
+func Browse(w http.ResponseWriter, r *http.Request) {
+	page := mux.Vars(r)["page"]
+	var (
+		posts []db.Post
+		err   error
+	)
+
+	switch page {
+	case "recent":
+		posts, err = db.GetRecentPosts()
+	case "popular":
+		posts, err = db.GetPopularPosts()
+	default:
+		http.Error(w, "Invalid page option, try \"popular\" or \"recent\"", 400)
+		return
+	}
+
+	if err != nil {
+		http.Error(w, "Error retrieving posts", 500)
+		return
+	}
+
+	bytes, err := json.MarshalIndent(posts, "", "\t")
+	if err != nil {
+		http.Error(w, "Error marshalling JSON", 500)
+		return
+	}
+
+	w.Write(bytes)
+}
+
+// Conversation endpoint (/api/conversation GET)
+func Conversation(w http.ResponseWriter, r *http.Request) {
+	comments, err := db.GetRecentComments()
+	if err != nil {
+		http.Error(w, "Error retrieving comments", 500)
+		return
+	}
+
+	for i := range comments {
+		comments[i].GetReplies()
+	}
+
+	bytes, err := json.MarshalIndent(comments, "", "\t")
+	if err != nil {
+		http.Error(w, "Error marshalling JSON", 500)
+		return
+	}
+
+	w.Write(bytes)
+}
