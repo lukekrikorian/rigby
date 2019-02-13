@@ -1,0 +1,11 @@
+.author {
+	color: #2F2F2F;
+}
+
+.reply {
+	margin-left: 25px;
+}
+
+.reply, .comment {
+	margin-top: 10px;
+}

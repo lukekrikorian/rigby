@@ -1,0 +1,28 @@
+{
+  "name": "rigby-client",
+  "version": "1.0.0",
+  "description": "Rigby client side code",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "Luke Krikorian",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "cache-loader": "^2.0.1",
+    "css-loader": "^2.1.0",
+    "preact": "^8.4.2",
+    "preact-compat": "^3.18.4",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-markdown": "^4.0.6",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1"
+  }
+}

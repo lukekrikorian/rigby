@@ -1,0 +1,12 @@
+body {
+	font-family: monospace;
+	background: #f7f6e8;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}

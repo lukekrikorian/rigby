@@ -1,0 +1,26 @@
+#headerBorder {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 5px;
+	width: 100%;
+	overflow: hidden;
+	background: #662113;
+}
+
+#headerWrap {
+	display: block;
+}
+#header {
+	display: inline-block;
+	margin-top: 6px;
+	font-size: 1.3em;
+	color: #662113;
+	font-weight: bold;
+	text-decoration: none;
+	outline: 0;
+}
+
+#header:hover {
+	color: #5c1c0f;
+}

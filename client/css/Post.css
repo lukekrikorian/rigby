@@ -1,0 +1,38 @@
+code {
+	color: #662113;
+}
+
+pre > code {
+	display: block;
+	padding: 10px;
+	border: 3px #662113 dashed;	
+}
+
+pre > h1 {
+	font-size: 20px;
+}
+
+blockquote {
+	border-left: 5px solid #662113;
+	display: block;
+	margin-left: 0px;
+	padding-left: 15px;
+	font-weight: bold;
+}
+
+.title {
+	margin-bottom: 0px;
+}
+
+.postBody {
+	border-top: 2px solid #662113;
+	border-bottom: 2px solid #662113;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+
+.postAuthor {
+	font-weight: normal;
+	margin-top: 8px;
+	margin-bottom: 10px;
+}
