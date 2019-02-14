@@ -2,6 +2,10 @@ code {
 	color: #662113;
 }
 
+pre {
+	white-space: pre-wrap;
+}
+
 pre > code {
 	display: block;
 	padding: 10px;
@@ -35,4 +39,16 @@ blockquote {
 	font-weight: normal;
 	margin-top: 8px;
 	margin-bottom: 10px;
+	display: inline-block;
+}
+
+.tweetButton {
+	float: right;
+	margin-top: 8px;
+}
+
+.heart {
+	float: right;
+	margin-top: 8px;
+	margin-right: 8px;
 }
