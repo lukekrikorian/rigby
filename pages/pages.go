@@ -2,17 +2,11 @@ package pages
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 	"site/db"
 
 	"github.com/gorilla/mux"
 )
-
-var templates = template.Must(template.ParseGlob("templates/*"))
-
-// NotFound is the 404 page page
-var NotFound = templates.Lookup("404")
 
 // Index page
 func Index(w http.ResponseWriter, r *http.Request) {
