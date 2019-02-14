@@ -33,26 +33,21 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", removeDirectories(fileServer)))
 
 	r.HandleFunc("/logout", api.Logout).Methods("GET")
-
-	r.HandleFunc("/", pages.Index).Methods("GET")
-	r.HandleFunc("/~{username}", pages.Profile).Methods("GET")
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
-	r.HandleFunc("/posts/{post}", pages.Post).Methods("GET")
-	r.HandleFunc("/comment/{post}", pages.Comment).Methods("GET")
-	r.HandleFunc("/reply/{comment}", pages.Reply).Methods("GET")
-	r.HandleFunc("/browse/{page}", pages.Browse).Methods("GET")
-	r.HandleFunc("/conversation", pages.Conversation).Methods("GET")
-	r.HandleFunc("/{page}", pages.Pages).Methods("GET")
 
-	r.HandleFunc("/api/signup", api.Signup).Methods("POST")
-	r.HandleFunc("/api/login", api.Login).Methods("POST")
-	r.HandleFunc("/api/post", api.CreatePost).Methods("POST")
-	r.HandleFunc("/api/comments", api.CreateComment).Methods("POST")
-	r.HandleFunc("/api/replies", api.CreateReply).Methods("POST")
-	r.HandleFunc("/api/vote/{post}", api.Vote).Methods("POST")
-	r.HandleFunc("/api/posts/{post}", api.Post).Methods("GET")
-	r.HandleFunc("/api/browse/{page}", api.Browse).Methods("GET")
-	r.HandleFunc("/api/conversation", api.Conversation).Methods("GET")
+	a := r.PathPrefix("/api/").Subrouter()
+	a.HandleFunc("/signup", api.Signup).Methods("POST")
+	a.HandleFunc("/login", api.Login).Methods("POST")
+	a.HandleFunc("/post", api.CreatePost).Methods("POST")
+	a.HandleFunc("/comments", api.CreateComment).Methods("POST")
+	a.HandleFunc("/replies", api.CreateReply).Methods("POST")
+	a.HandleFunc("/vote/{post}", api.Vote).Methods("POST")
+	a.HandleFunc("/posts/{post}", api.Post).Methods("GET")
+	a.HandleFunc("/browse/{page}", api.Browse).Methods("GET")
+	a.HandleFunc("/conversation", api.Conversation).Methods("GET")
+	a.HandleFunc("/users/{user}", api.User).Methods("GET")
+
+	r.PathPrefix("/").HandlerFunc(pages.Index)
 
 	options := handlers.AllowedOrigins([]string{"localhost", config.Config.Server.Origin})
 
@@ -79,7 +74,7 @@ func main() {
 func removeDirectories(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/") {
-			pages.NotFound.Execute(w, nil)
+			http.Error(w, "Not found", 404)
 			return
 		}
 		next.ServeHTTP(w, r)

@@ -263,14 +263,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	post.GetComments()
 	post.GetCommentReplies()
 
-	bytes, err := json.MarshalIndent(post, "", "\t")
-	if err != nil {
-		http.Error(w, "Error marshalling JSON", 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(bytes)
+	sendAsJSON(post, w, r)
 }
 
 // Browse endpoint (/api/browse/(popular|recent) GET)
@@ -296,14 +289,7 @@ func Browse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bytes, err := json.MarshalIndent(posts, "", "\t")
-	if err != nil {
-		http.Error(w, "Error marshalling JSON", 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(bytes)
+	sendAsJSON(posts, w, r)
 }
 
 // Conversation endpoint (/api/conversation GET)
@@ -318,9 +304,28 @@ func Conversation(w http.ResponseWriter, r *http.Request) {
 		comments[i].GetReplies()
 	}
 
-	bytes, err := json.MarshalIndent(comments, "", "\t")
+	sendAsJSON(comments, w, r)
+}
+
+// User endpoint (/api/users/{user} GET)
+func User(w http.ResponseWriter, r *http.Request) {
+	username := mux.Vars(r)["user"]
+
+	user, err := db.GetUserByUsername(username)
 	if err != nil {
-		http.Error(w, "Error marshalling JSON", 500)
+		http.Error(w, "Error retrieving user", 500)
+		return
+	}
+
+	user.GetPosts()
+
+	sendAsJSON(user, w, r)
+}
+
+func sendAsJSON(JSON interface{}, w http.ResponseWriter, r *http.Request) {
+	bytes, err := json.MarshalIndent(JSON, "", "\t")
+	if err != nil {
+		http.Error(w, "Error formatting JSON", 500)
 		return
 	}
 
