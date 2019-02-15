@@ -10,7 +10,7 @@ import (
 
 // Index page
 func Index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/app.html")
+	http.ServeFile(w, r, "static/dist/index.html")
 }
 
 // StaticPost handles static post pages like /post/{id}.txt

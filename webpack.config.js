@@ -1,18 +1,28 @@
 const path = require("path");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 
 module.exports = {
-    mode: "production",
-    entry: ["./client/index.jsx"],
+    mode: "development",
+    entry: "./client/index.jsx",
+    plugins: [
+        new CleanWebpackPlugin(["./static/dist"]),
+        new HtmlWebpackPlugin({
+            template: "static/template.html",
+            inject: false,
+        })
+    ],
     output: {
-        filename: "bundle.js",
-        path: path.resolve(__dirname + "/static")
+        filename: "[name].[contentHash].js",
+        path: path.resolve(__dirname + "/static/dist")
     },
     module: {
         rules: [
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                use: ['cache-loader',
+                use: ["cache-loader",
                 {
                     loader: 'babel-loader',
                     options: {

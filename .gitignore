@@ -3,5 +3,5 @@ todo
 site
 .vscode
 .cache-loader
-static/bundle.js
+static/dist
 node_modules
