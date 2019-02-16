@@ -1,17 +1,16 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
-import { Redirect } from "react-router-dom";
-import "../css/Form.css";
 
-class Signup extends Component {
+class Login extends Component {
 	constructor(props){
 		super(props);
-		this.state = { 
-			username: '', 
-			password: '', 
-			error: '', 
-			redirect: false 
+		this.state = {
+			username: '',
+			password: '',
+			error: '',
+			redirect: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.submit = this.submit.bind(this);
@@ -24,28 +23,23 @@ class Signup extends Component {
 
 	submit(event){
 		event.preventDefault();
+
 		const body = {
 			username: this.state.username, 
 			password: this.state.password
 		}
 
-		fetch("/api/signup", {
+		fetch("/api/login", {
 			method: "POST",
 			credentials: "same-origin",
 			body: JSON.stringify(body)
 		}).then(response => {
 			if (!response.ok) {
-				response.text().then(error => this.setState({ error }));
-			} else {
-				fetch("/api/login", {
-					method: "POST",
-					credentials: "same-origin",
-					body: JSON.stringify(body)
-				}).then(() => { 
-					window.isLoggedIn = true;
-					this.setState({ redirect: true })
-				})
+				response.text().then(error => { this.setState({ error }) });
+				return
 			}
+			window.isLoggedIn = true;
+			this.setState({ redirect: true });
 		}).catch(console.error);
 	}
 
@@ -58,7 +52,7 @@ class Signup extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Sign Up</h1>
+					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Login</h1>
 					<form>
 						<input type="text" value={this.state.username} onChange={this.handleChange} name="username" placeholder="Username"/>
 						<br/>
@@ -69,9 +63,8 @@ class Signup extends Component {
 					</form>
 				</Center>
 			</div>
-		);
-
+		)
 	}
 }
 
-export default Signup;
+export default Login;

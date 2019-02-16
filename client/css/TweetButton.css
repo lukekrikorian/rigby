@@ -9,12 +9,12 @@
 .tweetButton > img {
 	width: 80%;
 	height: 80%;
-	transition-delay: 0.2s;
+	transition-duration: 0.2s;
 	padding: 5px;
 }
 
 .tweetButton > img:hover {
 	width: 95%;
 	height: 95%;
-	transition-delay: 0.2s;
+	transition-duration: 0.2s;
 }

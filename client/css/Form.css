@@ -1,0 +1,22 @@
+input[type="text"], input[type="password"] {
+	border: 2px dashed #662113;
+	font-size: 16px;
+	padding: 7px;
+	background: none;
+	margin-bottom: 5px;
+	font-family: monospace;
+}
+
+input[type="submit"] {
+	background: #662113;
+	border: none;
+	padding: 7px;
+	border-radius: 3px;
+	color: white;
+	font-family: monospace;
+}
+
+input[type="submit"]:hover {
+	background: #571b0f;
+	cursor: pointer;
+}

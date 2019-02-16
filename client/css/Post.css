@@ -26,11 +26,12 @@ blockquote {
 
 .title {
 	margin-bottom: 0px;
+	font-size: 32px;
+	color: #3c3c3c;
 }
 
 .postBody {
 	border-top: 2px solid #662113;
-	border-bottom: 2px solid #662113;
 	padding-bottom: 20px;
 	margin-bottom: 20px;
 }
@@ -38,17 +39,23 @@ blockquote {
 .postAuthor {
 	font-weight: normal;
 	margin-top: 8px;
-	margin-bottom: 10px;
+	margin-bottom: 4px;
 	display: inline-block;
+	font-size: 14px;
 }
 
 .tweetButton {
 	float: right;
-	margin-top: 8px;
+	margin-top: 4px;
 }
 
 .heart {
 	float: right;
-	margin-top: 8px;
+	margin-top: 4px;
 	margin-right: 8px;
+	margin-left: 20px;
+}
+
+.bottomBorder {
+	border-bottom: 2px solid #662113;
 }

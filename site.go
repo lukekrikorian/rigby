@@ -32,10 +32,10 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./static"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", removeDirectories(fileServer)))
 
-	r.HandleFunc("/logout", api.Logout).Methods("GET")
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
 
 	a := r.PathPrefix("/api/").Subrouter()
+	a.HandleFunc("/logout", api.Logout).Methods("POST")
 	a.HandleFunc("/signup", api.Signup).Methods("POST")
 	a.HandleFunc("/login", api.Login).Methods("POST")
 	a.HandleFunc("/post", api.CreatePost).Methods("POST")
@@ -46,6 +46,7 @@ func main() {
 	a.HandleFunc("/browse/{page}", api.Browse).Methods("GET")
 	a.HandleFunc("/conversation", api.Conversation).Methods("GET")
 	a.HandleFunc("/users/{user}", api.User).Methods("GET")
+	a.HandleFunc("/isLoggedIn", api.IsLoggedIn).Methods("GET")
 
 	r.PathPrefix("/").HandlerFunc(pages.Index)
 

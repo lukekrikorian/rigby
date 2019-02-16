@@ -56,7 +56,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not create user", 500)
 	} else {
 		fmt.Println("New user", signup.Username)
-		http.Redirect(w, r, "/api/login", http.StatusTemporaryRedirect)
+		w.Write([]byte("Success"))
 	}
 }
 
@@ -88,11 +88,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		http.SetCookie(w, sessionCookie)
 
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/")
+		w.Write([]byte("Success"))
 		return
 	}
 	http.Error(w, "Incorrect login", 500)
+}
+
+// IsLoggedIn endpoint (/isLoggedIn GET)
+func IsLoggedIn(w http.ResponseWriter, r *http.Request) {
+	if _, err := db.CheckAuth(r); err != nil {
+		http.Error(w, "Not logged in", 500)
+		return
+	}
+	w.Write([]byte("Logged in"))
 }
 
 // Logout endpoint (/logout GET)

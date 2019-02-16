@@ -10,8 +10,9 @@ import "../css/Post.css";
 
 export default class Post extends Component {
 	constructor(props){
+		super(props);
 		this.state = {
-			data: {},
+			post: {},
 			postID: props.match.params.id
 		};
 	}
@@ -19,7 +20,7 @@ export default class Post extends Component {
 	loadData() {
 		fetch(`/api/posts/${this.state.postID}`)
 			.then(response => response.json())
-			.then(json => this.setState({ data: json }))
+			.then(json => this.setState({ post: json }))
 			.catch(console.error);
 	}
 
@@ -28,7 +29,7 @@ export default class Post extends Component {
 	}
 
 	render(){
-		const post = this.state.data;
+		const { post } = this.state;
 		return (
 			<div>
 				<Header/>
@@ -37,7 +38,7 @@ export default class Post extends Component {
 					<h4 className="postAuthor">By <Link to={`/~${post.Author}`}>{post.Author}</Link> on {post.Created && post.Created.substring(0, 10)}</h4>
 					<TweetButton URL={`https://rigby.space/posts/${post.ID}`}/>
 					<Heart post={post.ID}/>
-					<ReactMarkdown source={post.Body} className="postBody"/>
+					<ReactMarkdown source={post.Body} className={`${post.Comments && post.Comments.length > 0 && 'bottomBorder'} postBody`}/>
 					<div class="comments">
 						{ post.Comments && 
 							post.Comments.map(comment => <Comment Comment={comment}/>) }

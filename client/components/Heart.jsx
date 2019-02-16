@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../css/Heart.css";
 
-export default class Heart extends Component {
+class Heart extends Component {
 	constructor(props){
 		super(props);
 		this.state = { error: false };
@@ -11,8 +11,8 @@ export default class Heart extends Component {
 	sendLike(e){
 		e.preventDefault();
 		fetch(`/api/vote/${this.props.post}`, { 
-			method: 'POST',
-			credentials: 'same-origin'
+			method: "POST",
+			credentials: "same-origin"
 		}).then(response => {
 				if (!response.ok) {
 					this.setState({ error: true });
@@ -29,3 +29,4 @@ export default class Heart extends Component {
 	}
 }
 
+export default Heart;
