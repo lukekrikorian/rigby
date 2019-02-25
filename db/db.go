@@ -24,7 +24,7 @@ var Sessions = make(map[string]string)
 type User struct {
 	ID       string
 	Username string
-	Password string
+	Password string `json:"-"`
 	Created  string
 	Posts    []Post
 }
@@ -48,7 +48,7 @@ type Comment struct {
 	UserID  string `db:"userID"`
 	Author  string
 	Body    string
-	PostID  string `db:"postID" json:"postid"`
+	PostID  string `db:"postID"`
 	Created string
 	Replies []Reply
 	Parent  *Post
@@ -56,7 +56,7 @@ type Comment struct {
 
 // Reply representation
 type Reply struct {
-	ParentID string `db:"parentID" json:"parentid"`
+	ParentID string `db:"parentID"`
 	ID       string `db:"id"`
 	UserID   string `db:"userID"`
 	Author   string
