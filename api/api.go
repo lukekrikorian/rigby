@@ -56,7 +56,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not create user", 500)
 	} else {
 		fmt.Println("New user", signup.Username)
-		w.Write([]byte("Success"))
+		fmt.Fprintf(w, "Success")
 	}
 }
 
@@ -88,7 +88,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		http.SetCookie(w, sessionCookie)
 
-		w.Write([]byte("Success"))
+		fmt.Fprintf(w, "Success")
 		return
 	}
 	http.Error(w, "Incorrect login", 500)
@@ -100,7 +100,7 @@ func IsLoggedIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not logged in", 500)
 		return
 	}
-	w.Write([]byte("Logged in"))
+	fmt.Fprintf(w, "Logged in")
 }
 
 // Logout endpoint (/logout GET)
@@ -141,6 +141,12 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_, err = db.GetPost(comment.PostID)
+	if err != nil {
+		http.Error(w, "Invalid post", 404)
+		return
+	}
+
 	err = comment.Create()
 	if err != nil {
 		fmt.Println(err)
@@ -148,8 +154,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusSeeOther)
-	fmt.Fprintf(w, "/posts/%s", comment.PostID)
+	fmt.Fprintf(w, "Success")
 }
 
 // CreateReply endpoint (/api/replies POST)
@@ -175,20 +180,17 @@ func CreateReply(w http.ResponseWriter, r *http.Request) {
 
 	reply.UserID = userID
 
-	err = reply.Create()
+	_, err = db.GetComment(reply.ParentID)
 	if err != nil {
-		fmt.Println(err)
-		http.Error(w, "Error saving reply", 500)
-		return
-	}
-
-	comment, err := db.GetComment(reply.ParentID)
-	if err == nil {
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/posts/%s#%s", comment.PostID, reply.ID)
+		http.Error(w, "Invalid comment", 404)
 	} else {
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/")
+		err = reply.Create()
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Error saving reply", 500)
+			return
+		}
+		fmt.Fprintf(w, "Success")
 	}
 }
 
@@ -217,8 +219,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if l := len(post.Body); l < 3 || l > 5000 {
-		http.Error(w, "Post body must be within 3 and 5000 characters", 500)
+	if l := len(post.Body); l < 100 || l > 10000 {
+		http.Error(w, "Post body must be within 100 and 10,000 characters", 500)
 		return
 	}
 
@@ -228,7 +230,6 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error creating post", 500)
 		return
 	}
-	w.WriteHeader(http.StatusSeeOther)
 	fmt.Fprintf(w, "/posts/%s", post.ID)
 }
 
@@ -319,7 +320,22 @@ func Conversation(w http.ResponseWriter, r *http.Request) {
 func User(w http.ResponseWriter, r *http.Request) {
 	username := mux.Vars(r)["user"]
 
-	user, err := db.GetUserByUsername(username)
+	var (
+		user db.User
+		err  error
+	)
+
+	if username == "me" {
+		userID, err := db.CheckAuth(r)
+		if err != nil {
+			http.Error(w, "You aren't logged in", 500)
+			return
+		}
+		user, err = db.GetUserByID(userID)
+	} else {
+		user, err = db.GetUserByUsername(username)
+	}
+
 	if err != nil {
 		http.Error(w, "Error retrieving user", 500)
 		return
