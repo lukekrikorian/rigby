@@ -55,7 +55,7 @@ export default class Comment extends Component {
 		const comment = this.props.Comment;
 		return (
 			<div className={this.props.className || "comment"}>
-				<p className="author"><Link to={`~${comment.Author}`}>{comment.Author}</Link> on {this.props.showPost ? <Link to={`/posts/${comment.PostID}`}>this post</Link> : comment.Created.substring(0, 10)}</p>
+				<p className="author"><Link to={`/~${comment.Author}`}>{comment.Author}</Link> on {this.props.showPost ? <Link to={`/posts/${comment.PostID}`}>this post</Link> : comment.Created.substring(0, 10)}</p>
 				<ReactMarkdown allowedTypes={["paragraph", "text", "strong", "emphasis", "link"]} source={comment.Body} className="commentBody"/>
 				<div className="replies">
 				{ comment.Replies &&
