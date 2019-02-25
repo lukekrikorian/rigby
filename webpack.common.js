@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 
 module.exports = {
-    mode: "development",
     entry: "./client/index.jsx",
     plugins: [
         new CleanWebpackPlugin(["./static/dist"]),
