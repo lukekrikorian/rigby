@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
+import { setLoggedIn } from "../misc/LoggedIn";
 
 class Login extends Component {
 	constructor(props){
@@ -35,10 +36,10 @@ class Login extends Component {
 			body: JSON.stringify(body)
 		}).then(response => {
 			if (!response.ok) {
-				response.text().then(error => { this.setState({ error }) });
+				response.text().then(error => this.setState({ error }));
 				return
 			}
-			window.isLoggedIn = true;
+			setLoggedIn(true);
 			this.setState({ redirect: true });
 		}).catch(console.error);
 	}

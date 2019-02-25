@@ -1,3 +1,9 @@
+input, textarea {
+  -webkit-appearance: none;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+
 input[type="text"], input[type="password"] {
 	border: 2px dashed #662113;
 	font-size: 16px;
@@ -5,6 +11,15 @@ input[type="text"], input[type="password"] {
 	background: none;
 	margin-bottom: 5px;
 	font-family: monospace;
+}
+
+textarea {
+	border: 2px dashed #662113;
+	padding: 6px;
+	background: none;
+	max-width: 700px;
+	min-width: 100px;
+	min-height: 50px;
 }
 
 input[type="submit"] {
@@ -20,3 +35,4 @@ input[type="submit"]:hover {
 	background: #571b0f;
 	cursor: pointer;
 }
+

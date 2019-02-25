@@ -32,7 +32,7 @@ class Profile extends Component {
 					<h2>~{user.Username}</h2>
 					<p>joined on {user.Created && user.Created.substring(0, 10)}</p>
 					<h4>Posts</h4>
-					<PostsList posts={user.Posts}></PostsList>
+					<PostsList posts={user.Posts} showAuthor={false}></PostsList>
 				</Center>
 			</div>
 		)

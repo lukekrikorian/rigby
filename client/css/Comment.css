@@ -1,5 +1,10 @@
 .author {
 	color: #2F2F2F;
+	margin-bottom: 0px;
+}
+
+.commentBody > p {
+	margin-top: 2px;
 }
 
 .reply {

@@ -11,5 +11,17 @@ a:hover {
 	text-decoration: underline;
 }
 
+.linkLike {
+	background: none;
+	border: none;
+	color: blue;
+	padding: 0;
+}
+
+.linkLike:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 :focus { outline: none; } 
 ::-moz-focus-inner { border: none; }

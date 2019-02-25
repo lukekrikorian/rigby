@@ -12,7 +12,7 @@ class PostCard extends Component {
 			<div className="postCard" style={{ margin: 5 }}>
 				↑{post.Votes} <Link to={`/posts/${post.ID}`}>{post.Title}</Link>
 				{ this.props.showAuthor && 
-					<span> By <Link to={`/~${post.Author}`}>{post.Author}</Link></span> }
+					<span> by <Link to={`/~${post.Author}`}>{post.Author}</Link></span> }
 			</div>
 		)
 	}

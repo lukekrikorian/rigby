@@ -7,7 +7,7 @@ export default class FourOhFour extends Component {
 		return (
 			<div>
 				<Header/>
-				<h2>404! That page was not found.</h2>
+				<h2 style={{ textAlign: 'center', fontSize: 34 }}>404! That page was not found.</h2>
 			</div>
 		)
 	}

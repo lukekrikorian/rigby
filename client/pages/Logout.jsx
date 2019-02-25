@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import { setLoggedIn } from "../misc/LoggedIn";
 
 class Logout extends Component {
 	constructor(props){
@@ -11,7 +12,7 @@ class Logout extends Component {
 		fetch("/api/logout", { method: "POST", credentials: "same-origin" })
 			.then(response => {
 				if (response.ok) {
-					window.isLoggedIn = false;
+					setLoggedIn(false);
 					this.setState({ redirect: true });
 				}
 			}).catch(console.error);
