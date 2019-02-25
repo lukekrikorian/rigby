@@ -78,6 +78,7 @@ func removeDirectories(next http.Handler) http.Handler {
 			http.Error(w, "Not found", 404)
 			return
 		}
+		w.Header().Set("Cache-Control", "public, max-age=31536000")
 		next.ServeHTTP(w, r)
 	})
 }

@@ -8,7 +8,7 @@ export default class Header extends Component {
 		return (
 			<div className="headerWrap">
 				<div id="headerBorder"></div>
-				<Link id="header" to="/">🐾 rigby react</Link>
+				<Link id="header" to="/">🐾 rigby</Link>
 			</div>
 		)
 	}
