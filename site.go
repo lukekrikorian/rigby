@@ -15,6 +15,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/shurcooL/httpgzip"
 )
 
 func main() {
@@ -29,8 +30,11 @@ func main() {
 	db.Init(url)
 
 	r := mux.NewRouter()
-	fileServer := http.FileServer(http.Dir("./static"))
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", removeDirectories(fileServer)))
+
+	fileServer := httpgzip.FileServer(http.Dir("./static"), httpgzip.FileServerOptions{
+		IndexHTML: false,
+	})
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", fileServer))
 
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
 
