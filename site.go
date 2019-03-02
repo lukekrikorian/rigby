@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"site/api"
@@ -34,7 +33,7 @@ func main() {
 	fileServer := httpgzip.FileServer(http.Dir("./static"), httpgzip.FileServerOptions{
 		IndexHTML: false,
 	})
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", fileServer))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", cacheFiles(fileServer)))
 
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
 
@@ -76,12 +75,8 @@ func main() {
 	log.Fatal(err)
 }
 
-func removeDirectories(next http.Handler) http.Handler {
+func cacheFiles(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasSuffix(r.URL.Path, "/") {
-			http.Error(w, "Not found", 404)
-			return
-		}
 		w.Header().Set("Cache-Control", "public, max-age=31536000")
 		next.ServeHTTP(w, r)
 	})
