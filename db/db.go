@@ -70,6 +70,13 @@ type Vote struct {
 	PostID string `db:"postID"`
 }
 
+// Login representation
+type Login struct {
+	Username    string
+	Password    string
+	SaveSession bool
+}
+
 // Init initializes and checks the DB connection for errors
 func Init(url string) {
 	DB, _ = sqlx.Open("mysql", url)
@@ -90,15 +97,15 @@ func CheckAuth(r *http.Request) (UserID string, Error error) {
 	return "", errors.New("User cookie incorrect")
 }
 
-// CheckLogin validates a login, comparing the two hashes
-func CheckLogin(username, password string) (User User, Error error) {
-	var hash string
-	if Error = DB.Get(&hash, "SELECT password FROM users WHERE username = ?", username); Error == nil {
-		if isCorrect := CheckPasswordHash(password, hash); !isCorrect {
-			Error = errors.New("Incorrect login")
-			return
-		}
-		Error = DB.Get(&User, "SELECT * FROM users WHERE username = ?", username)
+// Check validates a login, comparing the two hashes
+func (l *Login) Check() (User User, Error error) {
+	if Error = DB.Get(&User, "SELECT * FROM users WHERE username = ?", l.Username); Error != nil {
+		Error = errors.New("Invalid username")
+		return
+	}
+	if isCorrect := CheckPasswordHash(l.Password, User.Password); !isCorrect {
+		Error = errors.New("Incorrect login")
+		return
 	}
 	return
 }

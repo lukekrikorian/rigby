@@ -1,4 +1,4 @@
-input, textarea {
+input:not([type="checkbox"]), textarea {
   -webkit-appearance: none;
 	-webkit-border-radius: 0;
 	border-radius: 0;
@@ -35,4 +35,3 @@ input[type="submit"]:hover {
 	background: #571b0f;
 	cursor: pointer;
 }
-

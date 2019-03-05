@@ -10,6 +10,7 @@ class Login extends Component {
 		this.state = {
 			username: '',
 			password: '',
+			saveSession: false,
 			error: '',
 			redirect: false,
 		};
@@ -18,8 +19,12 @@ class Login extends Component {
 	}
 
 	handleChange(event){
-		const target = event.target;
-		this.setState({ [target.name]: target.value });
+		const { target } = event;
+		if (target.type === "checkbox") { 
+			this.setState({ [target.name]: target.checked });
+		} else {
+			this.setState({ [target.name]: target.value });
+		}
 	}
 
 	submit(event){
@@ -27,7 +32,8 @@ class Login extends Component {
 
 		const body = {
 			username: this.state.username, 
-			password: this.state.password
+			password: this.state.password,
+			saveSession: this.state.saveSession
 		}
 
 		fetch("/api/login", {
@@ -55,9 +61,12 @@ class Login extends Component {
 				<Center>
 					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Login</h1>
 					<form>
-						<input type="text" value={this.state.username} onChange={this.handleChange} name="username" placeholder="Username"/>
+						<input type="text" onChange={this.handleChange} name="username" placeholder="Username"/>
 						<br/>
-						<input type="password" value={this.state.password} onChange={this.handleChange} name="password" placeholder="Password"/>
+						<input type="password" onChange={this.handleChange} name="password" placeholder="Password"/>
+						<br/>
+						<input style={{marginLeft: 0}} onChange={this.handleChange} type="checkbox" name="saveSession" id="saveSession"></input>
+						<label style={{display: "inline-block", verticalAlign: "top", marginTop: 4, marginLeft: 3}} for="saveSession">Keep me logged in</label>
 						<br/>
 						<input type="submit" value="Submit" onClick={this.submit}/>
 						<p>{this.state.error}</p>

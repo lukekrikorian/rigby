@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"site/config"
 	"site/db"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -69,23 +71,33 @@ type loginJSON struct {
 func Login(w http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
-	var login loginJSON
+	var login db.Login
 
 	if err := decoder.Decode(&login); err != nil {
 		http.Error(w, "Incorrect login", 500)
 		return
 	}
 
-	if user, err := db.CheckLogin(login.Username, login.Password); err == nil {
+	if user, err := login.Check(); err == nil {
 
 		sessionID := uuid.Must(uuid.NewV4()).String()
 		db.Sessions[sessionID] = user.ID
 
 		sessionCookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-			Path:  "/",
+			Name:     "session",
+			Value:    sessionID,
+			Path:     "/",
+			HttpOnly: true,
 		}
+
+		if login.SaveSession {
+			sessionCookie.Expires = time.Now().Add(time.Hour * 24 * 7)
+		}
+
+		if config.Config.Server.Port == 443 {
+			sessionCookie.Secure = true
+		}
+
 		http.SetCookie(w, sessionCookie)
 
 		fmt.Fprintf(w, "Success")

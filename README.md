@@ -9,7 +9,6 @@ An example `config.json` file - HTTPS is optional:
 
 ```json
 {
-	{
 	"database": {
 		"username": "luke",
 		"password": "mypassword1",
