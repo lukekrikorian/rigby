@@ -359,7 +359,7 @@ func User(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendAsJSON(JSON interface{}, w http.ResponseWriter, r *http.Request) {
-	bytes, err := json.MarshalIndent(JSON, "", "\t")
+	bytes, err := json.Marshal(JSON)
 	if err != nil {
 		http.Error(w, "Error formatting JSON", 500)
 		return
