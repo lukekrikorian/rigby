@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="keywords" content="blogging, rigby, forum">
 		<title>Rigby</title>
 		<% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
 		<link rel="preload" as="script" href="/static/dist/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>">
@@ -11,6 +10,8 @@
 		<link rel="icon" href="/static/images/icon36.png">
 		<link rel="manifest" href="/static/manifest.json">
 		<link rel="apple-touch-icon" sizes="128x128" href="/static/images/icon128bg.png">
+		<meta name="keywords" content="blogging, rigby, forum">
+		<meta name="description" content="Rigby, a microblogging platform for cool kids">
 		<style> body { background: #f7f6e8; } </style>
 	</head>
 	<body>
