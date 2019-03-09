@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { isLoggedIn } from "../misc/LoggedIn";
+import { isLoggedIn } from "../misc/user";
 import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";

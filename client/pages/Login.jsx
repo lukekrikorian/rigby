@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
-import { setLoggedIn } from "../misc/LoggedIn";
+import { setLoggedIn, getSelf } from "../misc/user";
 
 class Login extends Component {
 	constructor(props){
@@ -46,6 +46,7 @@ class Login extends Component {
 				return
 			}
 			setLoggedIn(true);
+			getSelf();
 			this.setState({ redirect: true });
 		}).catch(console.error);
 	}
@@ -61,9 +62,9 @@ class Login extends Component {
 				<Center>
 					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Login</h1>
 					<form>
-						<input type="text" onChange={this.handleChange} name="username" placeholder="Username"/>
+						<input type="text" onChange={this.handleChange} name="username" placeholder="Username" required/>
 						<br/>
-						<input type="password" onChange={this.handleChange} name="password" placeholder="Password"/>
+						<input type="password" onChange={this.handleChange} name="password" placeholder="Password" required/>
 						<br/>
 						<input style={{marginLeft: 0}} onChange={this.handleChange} type="checkbox" name="saveSession" id="saveSession"></input>
 						<label style={{display: "inline-block", verticalAlign: "top", marginTop: 4, marginLeft: 3}} for="saveSession">Keep me logged in</label>

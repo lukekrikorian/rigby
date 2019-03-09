@@ -17,4 +17,11 @@ function isLoggedIn(){
 	return window.isLoggedIn;
 }
 
-export { setLoggedIn, isLoggedIn };
+function getSelf(){
+	fetch("/api/users/me", { credentials: "same-origin" })
+	.then(resp => resp.json())
+	.then(resp => { window.user = resp })
+	.catch(console.error);
+}
+
+export { setLoggedIn, isLoggedIn, getSelf };

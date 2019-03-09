@@ -6,7 +6,7 @@ import Comment from "../components/Comment";
 import Center from "../components/Center";
 import TweetButton from "../components/TweetButton";
 import Heart from "../components/Heart";
-import { isLoggedIn } from "../misc/LoggedIn";
+import { isLoggedIn } from "../misc/user";
 import "../css/Post.css";
 
 class Post extends Component {

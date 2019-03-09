@@ -13,12 +13,15 @@ import Browse from "./pages/Browse";
 import CreatePost from "./pages/CreatePost";
 import Conversation from "./pages/Conversation";
 
-import { setLoggedIn } from "./misc/LoggedIn";
+import { setLoggedIn, getSelf } from "./misc/user";
 import "./css/index.css";
 
-fetch("/api/isLoggedIn", { credentials: 'same-origin' })
+fetch("/api/isLoggedIn", { credentials: "same-origin" })
 	.then(response => {
 		setLoggedIn(response.ok);
+		if (response.ok) {
+			getSelf();
+		}
 	}).catch(console.error);
 
 ReactDOM.render(

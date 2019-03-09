@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import { setLoggedIn } from "../misc/LoggedIn";
+import { setLoggedIn } from "../misc/user";
 
 class Logout extends Component {
 	constructor(props){

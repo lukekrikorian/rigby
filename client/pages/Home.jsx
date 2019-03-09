@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
-import { isLoggedIn } from "../misc/LoggedIn";
+import { isLoggedIn } from "../misc/user";
 
 class Home extends Component {
 	render () {
@@ -11,7 +11,7 @@ class Home extends Component {
 				<div>
 					<Header/>
 					<Center>
-						<h1>hi</h1>
+						<h1>Welcome back {window.user && window.user.Username}</h1>
 						<Link to="/post">Create a post</Link>
 						<br/>
 						<Link to="/conversation">Recent conversation</Link>

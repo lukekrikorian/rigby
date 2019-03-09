@@ -9,7 +9,7 @@ class TweetButton extends Component {
 	render(){
 		return (
 			<a target="_blank" href={`https://twitter.com/intent/tweet?url=${this.props.URL}`} className="tweetButton">
-				<img src="/static/images/twitter.svg"/>
+				<img alt="Twitter Logo" src="/static/images/twitter.svg"/>
 			</a>
 		)
 	}
