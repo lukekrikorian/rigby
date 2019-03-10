@@ -36,6 +36,7 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", cacheFiles(fileServer)))
 
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
+	r.HandleFunc("/robots.txt", pages.Robots).Methods("GET")
 
 	a := r.PathPrefix("/api/").Subrouter()
 	a.HandleFunc("/logout", api.Logout).Methods("POST")

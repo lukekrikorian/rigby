@@ -18,11 +18,15 @@ func StaticPost(w http.ResponseWriter, r *http.Request) {
 	postID := mux.Vars(r)["post"]
 	post, err := db.GetPost(postID)
 	if err == nil {
-		postString := fmt.Sprintf("%s by %s\n\n%s", post.Title, post.Author, post.Body)
 		w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
-		w.Write([]byte(postString))
+		w.Write([]byte(post.Body))
 	} else {
 		fmt.Println(err)
 		http.Error(w, "Error serving static file", 500)
 	}
+}
+
+// Robots is the robots.txt page
+func Robots(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static/robots.txt")
 }
