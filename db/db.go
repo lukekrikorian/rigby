@@ -208,13 +208,13 @@ func GetComment(ID string) (Comment Comment, Error error) {
 
 // GetRecentPosts returns a list of recent posts
 func GetRecentPosts() (Posts []Post, Error error) {
-	Error = DB.Select(&Posts, "SELECT * FROM posts ORDER BY created DESC LIMIT 50")
+	Error = DB.Select(&Posts, "SELECT title, votes, author, id FROM posts ORDER BY created DESC LIMIT 50")
 	return
 }
 
 // GetPopularPosts returns a list of popular posts
 func GetPopularPosts() (Posts []Post, Error error) {
-	Error = DB.Select(&Posts, "SELECT * FROM posts ORDER BY votes DESC LIMIT 50")
+	Error = DB.Select(&Posts, "SELECT title, votes, author, id FROM posts ORDER BY votes DESC LIMIT 50")
 	return
 }
 
@@ -226,7 +226,7 @@ func GetRecentComments() (Comments []Comment, Error error) {
 
 // GetPosts populates a list of the users posts
 func (u *User) GetPosts() (Error error) {
-	Error = DB.Select(&u.Posts, "SELECT * FROM posts WHERE userID = ? ORDER BY created DESC", u.ID)
+	Error = DB.Select(&u.Posts, "SELECT title, votes, id FROM posts WHERE userID = ? ORDER BY created DESC", u.ID)
 	return
 }
 
