@@ -2,15 +2,44 @@ package pages
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"site/db"
+	"site/routes"
 
 	"github.com/gorilla/mux"
 )
 
+var indexTemplate = template.Must(template.ParseFiles("static/dist/index.html")).Lookup("index")
+
 // Index page
 func Index(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/dist/index.html")
+	p := r.URL.Path
+
+	var (
+		code        int
+		description string
+	)
+
+	for _, route := range routes.Routes {
+		if route.Path == p {
+			code = 200
+			description = route.Description
+			break
+		} else if route.RegexpPath != nil {
+			matches := route.RegexpPath.FindStringSubmatch(p)
+			if matches != nil {
+				code, description = route.Matcher(matches)
+			}
+		}
+	}
+
+	if code == 0 {
+		code, description = 404, "Not found!"
+	}
+
+	w.WriteHeader(code)
+	indexTemplate.Execute(w, description)
 }
 
 // StaticPost handles static post pages like /post/{id}.txt
