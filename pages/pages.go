@@ -6,11 +6,15 @@ import (
 	"net/http"
 	"site/db"
 	"site/routes"
+	text "text/template"
 
 	"github.com/gorilla/mux"
 )
 
-var indexTemplate = template.Must(template.ParseFiles("static/dist/index.html")).Lookup("index")
+var (
+	indexTemplate   = template.Must(template.ParseFiles("static/dist/index.html")).Lookup("index")
+	sitemapTemplate = text.Must(text.ParseFiles("static/sitemap.xml")).Lookup("sitemap")
+)
 
 // Index page
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +34,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 			matches := route.RegexpPath.FindStringSubmatch(p)
 			if matches != nil {
 				code, description = route.Matcher(matches)
+				break
 			}
 		}
 	}
@@ -58,4 +63,18 @@ func StaticPost(w http.ResponseWriter, r *http.Request) {
 // Robots is the robots.txt page
 func Robots(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "static/robots.txt")
+}
+
+// Sitemap is the sitemap.xml page
+func Sitemap(w http.ResponseWriter, r *http.Request) {
+	var paths []string
+
+	for _, route := range routes.Routes {
+		if route.Path != "" {
+			paths = append(paths, route.Path)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/xml; charset=UTF-8")
+	sitemapTemplate.Execute(w, paths)
 }

@@ -37,6 +37,7 @@ func main() {
 
 	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
 	r.HandleFunc("/robots.txt", pages.Robots).Methods("GET")
+	r.HandleFunc("/sitemap.xml", pages.Sitemap).Methods("GET")
 
 	a := r.PathPrefix("/api/").Subrouter()
 	a.HandleFunc("/logout", api.Logout).Methods("POST")
