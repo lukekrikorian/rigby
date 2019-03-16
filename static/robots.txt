@@ -1,5 +1,5 @@
 User-agent: *
-Sitemap: /sitemap.xml
+Sitemap: https://rigby.space/sitemap.xml
 Disallow: /static/dist/
 Disallow: /static/template.html
 Disallow: /static/sitemap.xml
