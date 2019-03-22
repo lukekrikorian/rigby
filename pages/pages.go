@@ -3,6 +3,7 @@ package pages
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"site/db"
 	"site/routes"
@@ -12,9 +13,14 @@ import (
 )
 
 var (
-	indexTemplate   = template.Must(template.ParseFiles("static/dist/index.html")).Lookup("index")
+	indexTemplate   = template.Must(template.ParseFiles("static/template.html")).Lookup("index")
 	sitemapTemplate = text.Must(text.ParseFiles("static/sitemap.xml")).Lookup("sitemap")
 )
+
+type indexInject struct {
+	Description string
+	Script      string
+}
 
 // Index page
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +29,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	var (
 		code        int
 		description string
+		script      string
 	)
 
 	for _, route := range routes.Routes {
@@ -43,8 +50,14 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		code, description = 404, "Not found!"
 	}
 
+	n, _ := ioutil.ReadDir("static/dist")
+	script = n[0].Name()
+
 	w.WriteHeader(code)
-	indexTemplate.Execute(w, description)
+	indexTemplate.Execute(w, indexInject{
+		Description: description,
+		Script:      script,
+	})
 }
 
 // StaticPost handles static post pages like /post/{id}.txt

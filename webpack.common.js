@@ -1,16 +1,10 @@
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-
 
 module.exports = {
     entry: "./client/index.jsx",
     plugins: [
-        new CleanWebpackPlugin(["./static/dist"]),
-        new HtmlWebpackPlugin({
-            template: "static/template.html",
-            inject: false,
-        })
+        new CleanWebpackPlugin(["./static/dist"])
     ],
     output: {
         filename: "[name].[contentHash].js",
