@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"site/db"
 	"site/routes"
+	"strings"
 	text "text/template"
 
 	"github.com/gorilla/mux"
@@ -20,6 +21,7 @@ var (
 type indexInject struct {
 	Description string
 	Script      string
+	Styles      string
 }
 
 // Index page
@@ -29,6 +31,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	var (
 		code        int
 		description string
+		styles      string
 		script      string
 	)
 
@@ -50,13 +53,20 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		code, description = 404, "Not found!"
 	}
 
-	n, _ := ioutil.ReadDir("static/dist")
-	script = n[0].Name()
+	files, _ := ioutil.ReadDir("static/dist")
+	for _, file := range files {
+		if n := file.Name(); strings.HasPrefix(n, "main") {
+			script = n
+		} else {
+			styles = n
+		}
+	}
 
 	w.WriteHeader(code)
 	indexTemplate.Execute(w, indexInject{
 		Description: description,
 		Script:      script,
+		Styles:      styles,
 	})
 }
 

@@ -1,11 +1,7 @@
 const path = require("path");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 module.exports = {
     entry: "./client/index.jsx",
-    plugins: [
-        new CleanWebpackPlugin(["./static/dist"])
-    ],
     output: {
         filename: "[name].[contentHash].js",
         path: path.resolve(__dirname + "/static/dist")
@@ -23,10 +19,6 @@ module.exports = {
                         presets: ["@babel/env", "@babel/react"]
                     }
                 }]
-            },
-            {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"]
             }
         ]
     },
