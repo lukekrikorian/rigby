@@ -66,10 +66,7 @@ func main() {
 	}
 
 	var err error
-	if config.Config.Server.Port == 443 {
-		go func() {
-			http.ListenAndServe(":80", http.HandlerFunc(redirectTLS))
-		}()
+	if len(config.Config.HTTPS.Certificate) > 0 {
 		srv.ListenAndServeTLS(config.Config.HTTPS.Certificate, config.Config.HTTPS.Key)
 	} else {
 		srv.ListenAndServe()
