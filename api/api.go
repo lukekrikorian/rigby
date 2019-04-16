@@ -231,8 +231,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if l := len(post.Body); l < 100 || l > 10000 {
-		http.Error(w, "Post body must be within 100 and 10,000 characters", 500)
+	if l := len(post.Body); l < db.MinimumPostLength || l > 10000 {
+		http.Error(w, fmt.Sprintf("Post body must be within %d and 10,000 characters", db.MinimumPostLength), 500)
 		return
 	}
 
