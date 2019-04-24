@@ -4,6 +4,7 @@
   display: inline-block;
   text-decoration: none;
   margin: 7px;
+  width: 100%;
 }
 
 .postCard > h3 {
