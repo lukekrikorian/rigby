@@ -1,5 +1,13 @@
-.author {
-	color: #2F2F2F;
+.comment {
+	padding: 15px;
+	background: var(--cream);
+	font-size: 16px;
+}
+
+.commentAuthor {
+	font-weight: 900;
+	font-size: 1.3em;
+	color: black;
 	margin-bottom: 0px;
 }
 
@@ -7,8 +15,20 @@
 	margin-top: 2px;
 }
 
+.commentBody {
+	text-align: justify;
+	font-family: var(--plex);
+	color: var(--off-black);
+	line-height: 1.3em;
+}
+
+.replies {
+	border-left: 4px solid var(--yellow);
+}
+
 .reply {
 	margin-left: 25px;
+	margin-right: 50px;
 }
 
 .reply, .comment {

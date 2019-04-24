@@ -1,0 +1,14 @@
+.checkbox {
+	vertical-align: middle;
+	color: black;
+	margin-top: 5px;
+}
+
+.checkbox .far {
+	color: var(--yellow);
+}
+
+.checkbox .label {
+	vertical-align: super;
+	margin-left: 10px;
+}

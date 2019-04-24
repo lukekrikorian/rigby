@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Header from "../components/Header";
 import Center from "../components/Center";
 import Comment from "../components/Comment";
+import Highlight from "../components/Highlight";
 
 class Conversation extends Component {
 	constructor(props){
@@ -25,7 +26,7 @@ class Conversation extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h1>People Talking</h1>
+					<Highlight>Recent Conversations</Highlight>
 					{ this.state.conversation && this.state.conversation.map(comment => <Comment Comment={comment} showPost/>) }
 				</Center>
 			</div>

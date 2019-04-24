@@ -1,0 +1,39 @@
+.postCard {
+  padding: 10px;
+  color: #000;
+  display: inline-block;
+  text-decoration: none;
+  margin: 7px;
+}
+
+.postCard > h3 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.postCard p {
+  color: var(--off-black);
+  margin-top: 2px;
+  margin-bottom: 0px;
+  font-weight: 600;
+  font-family: var(--plex);
+  overflow-wrap: anywhere;
+}
+
+.postVotes {
+  padding-top: 10px;
+}
+
+.arrowIcon {
+  vertical-align: middle;
+  margin-right: 7px;
+  margin-top: -4px;
+}
+
+.postsList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}

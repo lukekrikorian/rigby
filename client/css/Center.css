@@ -1,14 +1,30 @@
-.centerWrap {
-	text-align: center;
+#app, #app > div {
+	height: 100%;
 }
 
-.centerWrap:first-child {
-	text-align: left;
+#app > div {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 
 .center {
-	display: inline-block;
+	margin: 10px;
+}
+
+.wrap {
+	align-self: center;
 	max-width: 700px;
-	display: inline-block;
-	text-align: left;
+	flex: 1;
+	
+}
+
+.full-width {
+	width: 100%;
+}
+
+.vertical {
+	display: inline-flex;
+	align-items: center;
+	margin-top: -50px; /* To recenter for the header */
 }

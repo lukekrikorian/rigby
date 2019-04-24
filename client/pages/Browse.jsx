@@ -22,11 +22,15 @@ class Browse extends Component {
 	componentDidMount(){ this.loadData(); }
 
 	render(){
+		const pageName = (p => p === "recent" ? "Recent" : "Popular")(this.state.page);
+		
 		return (
 			<div>
 				<Header/>
-				<Center>
-					<h1>Browsin'</h1>
+				<Center>	
+					<div class="highlight">
+						<h1>{`${pageName} Posts`}</h1>
+					</div>
 					{ this.state.posts && <PostsList posts={this.state.posts}></PostsList> }
 				</Center>
 			</div>

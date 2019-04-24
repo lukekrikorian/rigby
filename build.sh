@@ -18,19 +18,22 @@ prod () {
 printf "[BUILD] "
 
 if [ !$1 ]; then
-	if [ $1 == "--css" ]; then
+	if [[ $1 == "--css" ]]; then
 		echo "Building CSS only"
 		css
 		exit 0
-	fi
-	if [ $1 == "--js" ]; then
+	elif [[ $1 == "--js" ]]; then
 		echo "Building JS only"
 		js "build"
 		exit 0
-	fi
-	if [ $1 == "--prod" ]; then
+	elif [[ $1 == "--prod" ]]; then
 		echo "Building for production"
 		prod
-		exit 0 
-	fi
+		exit 0
+	fi 
 fi
+
+echo "Building CSS & JS"
+css 
+js "build"
+exit 0

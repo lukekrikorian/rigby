@@ -4,34 +4,73 @@ input:not([type="checkbox"]), textarea {
 	border-radius: 0;
 }
 
+.formError {
+	font-family: var(--plex);
+	color: var(--red);
+	margin-bottom: 0px;
+}
+
 input[type="text"], input[type="password"] {
-	border: 2px dashed #662113;
-	font-size: 16px;
-	padding: 7px;
+	color: black;
 	background: none;
+	font-family: var(--plex);
+	font-size: 1.3em;
+	letter-spacing: 0.1em;
 	margin-bottom: 5px;
-	font-family: monospace;
+	padding: 7px;
+	border: none;
+	border-bottom: 5px solid var(--yellow);
+	box-sizing: border-box;
+	max-width: 100%;
 }
 
 textarea {
-	border: 2px dashed #662113;
-	padding: 6px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-family: var(--plex);
+  background: none;
+  font-size: 1.2em;
+  border: 3px solid var(--yellow);
+	resize: none;
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+input[type="submit"], button {
+	display: block;
+	font-size: 1em;
+	padding: 10px;
+	border: 3px solid black;
 	background: none;
-	max-width: 700px;
-	min-width: 100px;
-	min-height: 50px;
+	color: black;
+	font-family: var(--plex);
+	transition-duration: 0.2s;
+	box-shadow: 0px 5px var(--yellow);
+	transform: translateY(-5px);
 }
 
-input[type="submit"] {
-	background: #662113;
-	border: none;
-	padding: 7px;
-	border-radius: 3px;
-	color: white;
-	font-family: monospace;
-}
-
-input[type="submit"]:hover {
-	background: #571b0f;
+input[type="submit"]:hover, button:hover {
+	box-shadow: none;
+	transform: translateY(0);
+	color: var(--off-black);
+	border-color: var(--off-black);
 	cursor: pointer;
+	transition-duration: 0.2s;
+}
+
+.inlineButton {
+	box-shadow: none;
+	border: none;
+	color: black;
+	transform: translateY(0px);
+	padding: 0px;
+}
+
+.inlineButton:hover {
+	cursor: pointer;
+	box-shadow: none;
+	transform: translateY(0px);
+	color: var(--off-black);
 }

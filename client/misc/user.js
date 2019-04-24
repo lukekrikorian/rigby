@@ -11,7 +11,7 @@ function isLoggedIn(){
 			window.isLoggedIn = false;
 			return false;
 		} else {
-			return (val === "true");
+			return val === "true";
 		}
 	}
 	return window.isLoggedIn;

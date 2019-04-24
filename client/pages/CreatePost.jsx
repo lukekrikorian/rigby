@@ -3,8 +3,7 @@ import { isLoggedIn } from "../misc/user";
 import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
-
-import "../css/Form.css";
+import Highlight from "../components/Highlight";
 
 class CreatePost extends Component {
 	constructor(props){
@@ -14,7 +13,7 @@ class CreatePost extends Component {
 			body: '',
 			error: '',
 			redirect: '',
-			placeholder: 'Here we view the rare amphibian rigby, scientific name rigbaeus spacetus. The rigby is a nocturnal animal, only choosing to come out at night. Rigbys have only one natural predator, the loqual, scientific name postuslowqualitus. This creature aims to vore the rigby, from the inside out. Therefore, any loquals are to be shot on sight.'
+			placeholder: 'Markdown is supported. Rigby is designed for long-form content.'
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.submit = this.submit.bind(this);
@@ -52,16 +51,25 @@ class CreatePost extends Component {
 		return (
 			<div>
 				<Header/>
-				<Center>
-					<h1>Create a post</h1>
+				<Center full-width>
+					<Highlight>Create a post</Highlight>
 					<form>
-						<input onChange={this.handleChange} type="text" placeholder="Title" name="title"/>
-						<br/>
-						<textarea style={{ marginBottom: 6, minWidth: '24em', minHeight: '16em' }} onChange={this.handleChange} placeholder={this.state.placeholder} name="body"/>
-						<br/>
-						<input type="submit" value="Submit" onClick={this.submit}/>
+						<input 
+							onChange={this.handleChange}
+							type="text"
+							placeholder="Title"
+							name="title"/>
+						<textarea
+							style={{ height: 400 }}
+							onChange={this.handleChange}
+							placeholder={this.state.placeholder}
+							name="body"/>
+						<input
+							type="submit"
+							value="Submit"
+							onClick={this.submit}/>
 					</form>
-					<p>{this.state.error}</p>
+					<p className="formError">{this.state.error}</p>
 				</Center>
 			</div>
 		)

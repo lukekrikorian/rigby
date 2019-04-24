@@ -14,7 +14,6 @@ import CreatePost from "./pages/CreatePost";
 import Conversation from "./pages/Conversation";
 
 import { setLoggedIn, getSelf } from "./misc/user";
-import "./css/index.css";
 
 fetch("/api/isLoggedIn", { credentials: "same-origin" })
 	.then(response => {

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Header from "../components/Header";
 import Center from "../components/Center";
+import Highlight from "../components/Highlight";
 import { Redirect } from "react-router-dom";
-import "../css/Form.css";
 
 class Signup extends Component {
 	constructor(props){
@@ -58,14 +58,14 @@ class Signup extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Sign Up</h1>
+					<Highlight>Sign Up</Highlight>
 					<form>
 						<input type="text" value={this.state.username} onChange={this.handleChange} name="username" placeholder="Username"/>
 						<br/>
 						<input type="password" value={this.state.password} onChange={this.handleChange} name="password" placeholder="Password"/>
 						<br/>
-						<input type="submit" value="Submit" onClick={this.submit}/>
-						<p>{this.state.error}</p>
+						<input style={{ marginTop: 25 }} type="submit" value="Submit" onClick={this.submit}/>
+						<p className={`formError`}>{this.state.error}</p>
 					</form>
 				</Center>
 			</div>

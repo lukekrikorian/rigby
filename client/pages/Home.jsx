@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
 import { isLoggedIn } from "../misc/user";
+import Highlight from "../components/Highlight";
 
 class Home extends Component {
 	render () {
@@ -11,18 +12,23 @@ class Home extends Component {
 				<div>
 					<Header/>
 					<Center>
-						<h1>Welcome back {window.user && window.user.Username}</h1>
-						<Link to="/post">Create a post</Link>
-						<br/>
-						<Link to="/conversation">Recent conversation</Link>
-						<br/>
-						<Link to="/browse/recent">Recent posts</Link>
-						<br/>
-						<Link to="/browse/popular">Popular posts</Link>
-						<br/>
-						<Link to="/~me">Your profile</Link>
-						<br/>
-						<Link to="/logout">Logout</Link>
+						<Highlight>Welcome Back</Highlight>
+						<div className="links">
+							{ Object.entries({
+								"/post": ["Create a Post", "pen"],
+								"/conversation": ["Recent Conversation", "comments"],
+								"/browse/recent": ["Recent Posts", "clock"],
+								"/browse/popular": ["Popular Posts", "arrow-alt-circle-up"],
+								"/~me": ["Your Profile", "user-circle"],
+								"/logout": ["Logout", "sign-out-alt"],
+							}).map(([key, values]) => 
+									<Link 
+										className="homeLink inlineButton" 
+										to={key}>
+											<i class={`fas fa-${values[1]}`}></i> { values[0] }
+									</Link>
+							) }
+						</div>
 					</Center>
 				</div>
 			)
@@ -32,9 +38,13 @@ class Home extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h2 style={{ marginBottom: 0, color: "#332f2f" }}>Rigby</h2>
-					<p style={{ marginTop: 5, marginBottom: 0 }}>a site where cool kids can discuss</p>
-					<p style={{ marginTop: 4 }}><Link to="/signup">Sign up</Link> or <Link to="/login">Log in</Link> or <Link to="/browse/recent">Browse recent posts</Link></p>
+					<Highlight>Rigby</Highlight>
+					<p style={{ marginTop: 5, marginBottom: 0 }}>
+							a site where cool kids can discuss
+					</p>
+					<p style={{ marginTop: 4 }}>
+						<Link to="/signup">Sign up</Link> or <Link to="/login">Log in</Link> or <Link to="/browse/recent">Browse recent posts</Link>
+					</p>
 				</Center>
 			</div>
 		)

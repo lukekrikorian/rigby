@@ -3,6 +3,8 @@ import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
 import Center from "../components/Center";
 import { setLoggedIn, getSelf } from "../misc/user";
+import Checkbox from "../components/Checkbox";
+import Highlight from "../components/Highlight";
 
 class Login extends Component {
 	constructor(props){
@@ -60,17 +62,30 @@ class Login extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h1 style={{ marginBottom: 4, color: "#3c3c3c" }}>Login</h1>
+					<Highlight>Login</Highlight>
 					<form>
-						<input type="text" onChange={this.handleChange} name="username" placeholder="Username" required/>
+						<input 
+							type="text"
+							onChange={this.handleChange}
+							name="username"
+							placeholder="Username"/>
 						<br/>
-						<input type="password" onChange={this.handleChange} name="password" placeholder="Password" required/>
+						<input 
+							type="password"
+							onChange={this.handleChange}
+							name="password"
+							placeholder="Password"/>
 						<br/>
-						<input style={{marginLeft: 0}} onChange={this.handleChange} type="checkbox" name="saveSession" id="saveSession"></input>
-						<label style={{display: "inline-block", verticalAlign: "top", marginTop: 4, marginLeft: 3}} for="saveSession">Keep me logged in</label>
+						<Checkbox
+							onChange={this.handleChange}
+							label="Remember Me"
+							name="saveSession"/>
 						<br/>
-						<input type="submit" value="Submit" onClick={this.submit}/>
-						<p>{this.state.error}</p>
+						<input
+							type="submit"
+							value="Submit"
+							onClick={this.submit}/>
+						<p className="formError">{this.state.error}</p>
 					</form>
 				</Center>
 			</div>

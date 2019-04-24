@@ -29,9 +29,8 @@ class Profile extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<h2>~{user.Username}</h2>
-					<p>joined on {user.Created && user.Created.substring(0, 10)}</p>
-					<h4>Posts</h4>
+					<h1 class="profileHeader"><span style={{color: "var(--red)"}}>~</span>{user.Username}</h1>
+					<h3 class="profileDate">Joined {user.Created && user.Created.substring(0, 10)}</h3>
 					<PostsList posts={user.Posts} showAuthor={false}></PostsList>
 				</Center>
 			</div>
