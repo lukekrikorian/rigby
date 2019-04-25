@@ -2,7 +2,8 @@ CSS=$(cat /dev/urandom | tr -cd 'a-f0-9' | head -c 16) # Random hash
 
 css () {
 	rm ./static/dist/*.css
-	cat ./client/css/*.css > ./static/dist/$CSS.css
+	cp ./client/index.css ./static/dist/$CSS.css
+	cat ./client/css/*.css >> ./static/dist/$CSS.css
 }
 
 js () {
