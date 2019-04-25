@@ -26,8 +26,8 @@ class Conversation extends Component {
 			<div>
 				<Header/>
 				<Center>
-					<Highlight>Recent Conversations</Highlight>
-					{ this.state.conversation && this.state.conversation.map(comment => <Comment Comment={comment} showPost/>) }
+					<Highlight>Conversation</Highlight>
+					{ this.state.conversation && this.state.conversation.map(comment => <Comment Comment={comment}/>) }
 				</Center>
 			</div>
 		);

@@ -2,6 +2,7 @@
 	padding: 15px;
 	background: var(--cream);
 	font-size: 16px;
+	word-wrap: anywhere;
 }
 
 .commentAuthor {
