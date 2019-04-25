@@ -3,4 +3,7 @@
 	padding: 10px;
 	color: black;
 	font-size: 1.3em;
+	font-family: var(--plex);
+	border-left: 4px solid var(--yellow);
+	padding-left: 18px;
 }
