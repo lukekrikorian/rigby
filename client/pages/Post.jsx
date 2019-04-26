@@ -79,13 +79,13 @@ class Post extends Component {
 				<Header/>
 				<Center>
 					<div class="post">
-						<h4 className="postAuthor">A work by <Link to={`/~${Author}`}>{ Author }</Link></h4>
-						{ isLoggedIn() && 
-							<h4 className="likeButton inlineButton" onClick={this.likeButtonSubmit}>
-								<i className="fas fa-arrow-alt-circle-up fa-2x"></i> 
-									{ (Votes || 0).toString().padStart(2, "0") } 
-							</h4> }
-						<h1 className="title">{ Title }</h1>
+					<h4 className="postAuthor">A work by <Link to={`/~${Author}`}>{ Author }</Link></h4>
+					{ isLoggedIn() && 
+						<h4 className="likeButton inlineButton" onClick={this.likeButtonSubmit}>
+							<i className="fas fa-arrow-alt-circle-up"></i> 
+								{ (Votes || 0).toString().padStart(2, "0") } 
+						</h4> }
+					<h1 className="title">{ Title }</h1>
 						<ReactMarkdown className="postBody">{ Body }</ReactMarkdown>
 						{ Comments && 
 							<div class="comments">

@@ -3,8 +3,9 @@
   color: #000;
   display: inline-block;
   text-decoration: none;
-  margin: 7px;
-  width: 100%;
+  margin-bottom: 8px;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .postCard > h3 {
@@ -20,7 +21,6 @@
   margin-bottom: 0px;
   font-weight: 600;
   font-family: var(--plex);
-  overflow-wrap: anywhere;
 }
 
 .postVotes {

@@ -16,15 +16,15 @@ import Conversation from "./pages/Conversation";
 import { setLoggedIn, getSelf } from "./misc/user";
 
 fetch("/api/isLoggedIn", { credentials: "same-origin" })
-	.then(response => {
-		setLoggedIn(response.ok);
-		if (response.ok) {
-			getSelf();
+.then(response => {
+	setLoggedIn(response.ok);
+	if (response.ok) {
+		getSelf();
 		}
 	}).catch(console.error);
-
-ReactDOM.render(
-	<Router>
+	
+	ReactDOM.render(
+		<Router>
 		<Switch>
 			<Route exact path="/" component={Home}/>
 			<Route path="/logout" component={Logout}/>

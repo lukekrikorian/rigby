@@ -1,11 +1,9 @@
-.comment * {
-	word-wrap: anywhere;
-}
-
 .comment {
 	padding: 15px;
 	background: var(--cream);
 	font-size: 16px;
+	hyphens: auto;
+	-webkit-hyphens: auto;
 }
 
 .commentAuthor {

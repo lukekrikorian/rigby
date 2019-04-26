@@ -8,15 +8,11 @@
 	width: 100%;
 }
 
-.center {
-	margin: 10px;
-}
-
 .wrap {
 	align-self: center;
 	max-width: 700px;
 	flex: 1;
-	
+	margin: 10px;	
 }
 
 .full-width {

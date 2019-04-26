@@ -16,7 +16,7 @@ class Home extends Component {
 						<div className="links">
 							{ Object.entries({
 								"/post": ["Create a Post", "pen"],
-								"/conversation": ["Recent Conversation", "comments"],
+								"/conversation": ["Conversation", "comments"],
 								"/browse/recent": ["Recent Posts", "clock"],
 								"/browse/popular": ["Popular Posts", "arrow-alt-circle-up"],
 								"/~me": ["Your Profile", "user-circle"],

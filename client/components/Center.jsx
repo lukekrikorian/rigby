@@ -17,9 +17,7 @@ export default class Center extends Component {
 
 		return (
 			<div className={classes}>
-				<div className="center">
-					{ this.props.children }
-				</div>
+				{ this.props.children }
 			</div>
 		)
 	}
