@@ -6,6 +6,7 @@
   margin-bottom: 8px;
   hyphens: auto;
   -webkit-hyphens: auto;
+  width: 100%;
 }
 
 .postCard > h3 {
