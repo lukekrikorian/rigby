@@ -1,6 +1,6 @@
 .checkbox {
 	vertical-align: middle;
-	color: black;
+	color: var(--black);
 	margin-top: 5px;
 }
 

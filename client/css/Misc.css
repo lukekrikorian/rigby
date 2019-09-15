@@ -1,10 +1,10 @@
 .hoverFloat {
-  border: 4px solid #000;
+  border: 4px solid var(--black);
   transition-duration: 0.2s;
 }
 
 .hoverFloat:hover, .hoverFloat:active {
-  border: 4px solid #000;
+  border: 4px solid var(--black);
   box-shadow: -5px 5px var(--yellow);
   transform: translate(5px, -5px);
   transition-duration: 0.2s;
@@ -28,7 +28,7 @@
 }
 
 .highlight > h1 {
-  color: black;
+  color: var(--black);
 	position: relative;
   bottom: 25px;
   display: inline-block;

@@ -1,6 +1,6 @@
 .postCard {
   padding: 10px;
-  color: #000;
+  color: var(--black);
   display: inline-block;
   text-decoration: none;
   margin-bottom: 8px;

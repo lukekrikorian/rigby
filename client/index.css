@@ -12,9 +12,22 @@
   --yellow: #ebb900;
   --cream: #f4f2d6;
   --red: #BA3333;
+  --black: #000;
   --off-black: #2E2A2A;
+  --link: #0404a0;
   --plex: "IBM Plex Mono", monospace;
   --inter: "Inter", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --yellow: #241663;
+    --cream: #160f30;
+    --red: #a72693;
+    --link: var(--red);
+    --black: #eae7af;
+    --off-black: #f8f5c1;
+  }
 }
 
 html, body {
@@ -24,11 +37,14 @@ html, body {
 
 body {
 	font-family: 'Inter', sans-serif;
-	background: #f7f6e8;
+  background: var(--cream) !important;
 }
 
+p { color: var(--black); }
+
 a {
-	text-decoration: none;
+  text-decoration: none;
+  color: var(--link);
 }
 
 a:hover {

@@ -9,7 +9,7 @@
 .commentAuthor {
 	font-weight: 900;
 	font-size: 1.3em;
-	color: black;
+	color: var(--black);
 	margin-bottom: 0px;
 }
 

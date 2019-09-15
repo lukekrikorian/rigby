@@ -4,7 +4,7 @@
 	margin-right: 10px;
 	font-size: 1.5em;
 	line-height: 1.4em;
-	color: #000;
+	color: var(--black);
 	hyphens: auto;
 	-webkit-hyphens: auto;
 	padding-top: 1.5em;
@@ -34,7 +34,7 @@
 	line-height: 1.05em;
 	margin: 0;
 	margin-bottom: 0.5em;
-	color: #000;
+	color: var(--black);
 }
 
 pre {
@@ -44,7 +44,7 @@ pre {
 pre > code {
 	display: block;
 	padding: 10px;
-	color: black;
+	color: var(--black);
 	box-shadow: -8px 8px var(--yellow);
 	border: 2px solid var(--yellow);
 	background: var(--cream);

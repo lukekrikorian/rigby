@@ -1,6 +1,6 @@
 .profileHeader {
 	font-weight: 900;
-	color: #000;
+	color: var(--black);
 	font-size: 3em;
 	margin-bottom: 7px;
 }
