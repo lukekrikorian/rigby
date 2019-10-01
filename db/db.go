@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	// Needed for sqlx
 	_ "github.com/go-sql-driver/mysql"
@@ -21,7 +21,7 @@ var DB *sqlx.DB
 var Sessions = make(map[string]string)
 
 // MinimumPostLength is the minimun character length for a post
-const MinimumPostLength = 200
+const MinimumPostLength = 400
 
 // User representation
 type User struct {

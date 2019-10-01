@@ -3,10 +3,14 @@
   color: var(--black);
   display: inline-block;
   text-decoration: none;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   hyphens: auto;
   -webkit-hyphens: auto;
   width: 100%;
+}
+
+.postCard:hover {
+  color: var(--off-black) !important;
 }
 
 .postCard > h3 {
@@ -20,7 +24,6 @@
   color: var(--off-black);
   margin-top: 2px;
   margin-bottom: 0px;
-  font-weight: 600;
   font-family: var(--plex);
 }
 

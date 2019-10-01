@@ -12,7 +12,7 @@ class PostCard extends Component {
 		const bodyArray = post.Body.replace("\n", "").split(" ");
 		bodyArray.pop();
 		return(
-			<Link className="postCard hoverFloat" to={`/posts/${post.ID}`}>
+			<Link className="postCard" to={`/posts/${post.ID}`}>
 				<h3>{ post.Title }</h3>
 				<p>
 					<ReactMarkdown
