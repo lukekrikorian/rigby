@@ -20,10 +20,12 @@ fetch("/api/isLoggedIn", { credentials: "same-origin" })
 	setLoggedIn(response.ok);
 	if (response.ok) {
 		getSelf();
-		}
-	}).catch(console.error);
+	}
+}).catch(console.error);
 	
-	ReactDOM.render(
+document.title = "Rigby";
+
+ReactDOM.render(
 		<Router>
 		<Switch>
 			<Route exact path="/" component={Home}/>
@@ -38,5 +40,4 @@ fetch("/api/isLoggedIn", { credentials: "same-origin" })
 			<Route component={FourOhFour}/>
 		</Switch>
 	</Router>,
-	document.getElementById('app')
-);
+	document.getElementById('app'));

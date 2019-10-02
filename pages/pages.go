@@ -22,6 +22,7 @@ type indexInject struct {
 	Description string
 	Script      string
 	Styles      string
+	Title       string
 }
 
 // Index page
@@ -33,24 +34,26 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		description string
 		styles      string
 		script      string
+		title       string = "Rigby"
 	)
 
 	for _, route := range routes.Routes {
 		if route.Path == p {
 			code = 200
 			description = route.Description
+			title = route.Title
 			break
 		} else if route.RegexpPath != nil {
 			matches := route.RegexpPath.FindStringSubmatch(p)
 			if matches != nil {
-				code, description = route.Matcher(matches)
+				code, description, title = route.Matcher(matches)
 				break
 			}
 		}
 	}
 
 	if code == 0 {
-		code, description = 404, "Not found!"
+		code, description, title = 404, "Not found!", "404 Error"
 	}
 
 	files, _ := ioutil.ReadDir("static/dist")
@@ -67,6 +70,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		Description: description,
 		Script:      script,
 		Styles:      styles,
+		Title:       title,
 	})
 }
 

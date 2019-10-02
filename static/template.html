@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Rigby</title>
+		<title>{{ .Title }}</title>
 		<link rel="preload" as="script" href="/static/dist/{{ .Script }}">
 		<link rel="icon" href="/static/images/icon36.png">
 		<link rel="manifest" href="/static/manifest.json">
@@ -18,14 +18,14 @@
 		<!-- OpenGraph -->
 		<meta property="og:type" content="website">
 		<meta property="og:url" content="https://rigby.space/">
-		<meta property="og:title" content="Rigby">
+		<meta property="og:title" content="{{ .Title }}">
 		<meta property="og:description" content="{{ .Description }}">
 		<meta property="og:image" content="https://rigby.space/static/images/rigby.png">
 
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image">
 		<meta property="twitter:url" content="https://rigby.space/">
-		<meta property="twitter:title" content="Rigby">
+		<meta property="twitter:title" content="{{ .Title }}">
 		<meta property="twitter:description" content="{{ .Description }}">
 		<meta property="twitter:image" content="https://rigby.space/static/images/rigby.png">
 		
