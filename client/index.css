@@ -11,6 +11,7 @@
 :root {
   --yellow: #ebb900;
   --cream: #f4f2d6;
+  --off-cream: #ece9be;
   --red: #BA3333;
   --black: #000;
   --off-black: #2E2A2A;
@@ -23,6 +24,7 @@
   :root {
     --yellow: #241663;
     --cream: #160f30;
+    --off-cream: #1d1241;
     --red: #a72693;
     --link: var(--red);
     --black: #eae7af;
