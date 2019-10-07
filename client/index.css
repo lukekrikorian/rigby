@@ -54,9 +54,18 @@ a:hover {
 }
 
 @media only screen and (max-width: 500px){
-	.post > * {
+  .post {
+    padding-top: 0.3em;
+  }
+  .post > * {
 		line-height: 1.5em;
-    font-size: 0.7em;
+    font-size: 0.65em;
+  }
+  .post .title {
+    font-size: 1.3em;
+  }
+  .post .postAuthor {
+    font-size: 0.8em;
   }
   .postCard {
     font-size: 0.8em;
