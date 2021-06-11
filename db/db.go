@@ -105,7 +105,7 @@ func CheckLogin(username, password string) (User User, Error error) {
 
 // CreateUser saves a new user profile
 func CreateUser(username, password string) (Error error) {
-	id := uuid.Must(uuid.NewV4())
+	id := uuid.NewV4()
 	if password, Error = HashPassword(password); Error == nil {
 		_, Error = DB.Exec("INSERT INTO users VALUES (?, ?, ?, NOW())", id, username, password)
 	}
@@ -126,7 +126,7 @@ func GetUserByUsername(username string) (User User, Error error) {
 
 // Create saves a post
 func (p *Post) Create() (Error error) {
-	p.ID = uuid.Must(uuid.NewV4()).String()
+	p.ID = uuid.NewV4().String()
 	user, Error := GetUserByID(p.UserID)
 	if Error == nil {
 		p.Author = user.Username
@@ -138,7 +138,7 @@ func (p *Post) Create() (Error error) {
 
 // Create saves a comment
 func (c *Comment) Create() (Error error) {
-	c.ID = uuid.Must(uuid.NewV4()).String()
+	c.ID = uuid.NewV4().String()
 
 	user, _ := GetUserByID(c.UserID)
 	c.Author = user.Username
@@ -150,7 +150,7 @@ func (c *Comment) Create() (Error error) {
 
 // Create saves a reply
 func (r *Reply) Create() (Error error) {
-	r.ID = uuid.Must(uuid.NewV4()).String()
+	r.ID = uuid.NewV4().String()
 
 	user, _ := GetUserByID(r.UserID)
 	r.Author = user.Username
@@ -238,13 +238,17 @@ func (p *Post) GetCommentReplies() {
 
 // GetReplies populates a list of replies to a comment
 func (c *Comment) GetReplies() (Error error) {
-	Error = DB.Select(&c.Replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", c.ID)
+	var replies []Reply
+	Error = DB.Select(&replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", c.ID)
+	c.Replies = replies
 	return
 }
 
 // GetParent populates a comment's parent post data
 func (c *Comment) GetParent() (Error error) {
-	Error = DB.Get(&c.Parent, "SELECT * FROM posts WHERE id = ?", c.PostID)
+	var parent Post
+	Error = DB.Get(&parent, "SELECT * FROM posts WHERE id = ?", c.PostID)
+	c.Parent = &parent
 	return
 }
 

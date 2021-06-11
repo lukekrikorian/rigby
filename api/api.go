@@ -78,7 +78,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if user, err := db.CheckLogin(login.Username, login.Password); err == nil {
 
-		sessionID := uuid.Must(uuid.NewV4()).String()
+		sessionID := uuid.NewV4().String()
 		db.Sessions[sessionID] = user.ID
 
 		sessionCookie := &http.Cookie{

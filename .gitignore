@@ -3,3 +3,5 @@ todo
 site
 .vscode
 client
+backup.sql
+output.log
