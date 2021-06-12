@@ -12,7 +12,7 @@ import (
 	"site/db"
 	"site/pages"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jackc/pgx/stdlib"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
@@ -21,7 +21,7 @@ func main() {
 
 	config.Init()
 
-	url := fmt.Sprintf("%s:%s@/%s?charset=utf8mb4",
+	url := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s",
 		config.Config.Database.Username,
 		config.Config.Database.Password,
 		config.Config.Database.Database)

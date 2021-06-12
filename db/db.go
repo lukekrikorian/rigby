@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/satori/go.uuid"
 
@@ -32,12 +33,12 @@ type User struct {
 // Post representation
 type Post struct {
 	ID        string `db:"id"`
-	GamerRage bool   `db:"gamerRage"`
+	GamerRage int `db:"gamerRage"`
 	UserID    string `db:"userID"`
 	Author    string
 	Title     string
 	Body      string
-	Created   string
+	Created  time.Time
 	Votes     uint
 	Comments  []Comment
 }
@@ -72,7 +73,10 @@ type Vote struct {
 
 // Init initializes and checks the DB connection for errors
 func Init(url string) {
-	DB, _ = sqlx.Open("mysql", url)
+	DB, err := sqlx.Connect("pgx", url)
+	if err != nil {
+		log.Fatal(err)
+	}
 	if DB.Ping() != nil {
 		log.Fatal("Error connecting to database")
 	}
@@ -93,12 +97,12 @@ func CheckAuth(r *http.Request) (UserID string, Error error) {
 // CheckLogin validates a login, comparing the two hashes
 func CheckLogin(username, password string) (User User, Error error) {
 	var hash string
-	if Error = DB.Get(&hash, "SELECT password FROM users WHERE username = ?", username); Error == nil {
+	if Error = DB.Get(&hash, "SELECT password FROM users WHERE username = $1", username); Error == nil {
 		if isCorrect := CheckPasswordHash(password, hash); !isCorrect {
 			Error = errors.New("Incorrect login")
 			return
 		}
-		Error = DB.Get(&User, "SELECT * FROM users WHERE username = ?", username)
+		Error = DB.Get(&User, "SELECT * FROM users WHERE username = $1", username)
 	}
 	return
 }
@@ -107,20 +111,20 @@ func CheckLogin(username, password string) (User User, Error error) {
 func CreateUser(username, password string) (Error error) {
 	id := uuid.NewV4()
 	if password, Error = HashPassword(password); Error == nil {
-		_, Error = DB.Exec("INSERT INTO users VALUES (?, ?, ?, NOW())", id, username, password)
+		_, Error = DB.Exec("INSERT INTO users VALUES ($1, ?, ?, NOW())", id, username, password)
 	}
 	return
 }
 
 // GetUserByID returns a user based on their ID
 func GetUserByID(id string) (User User, Error error) {
-	Error = DB.Get(&User, "SELECT * FROM users WHERE id = ?", id)
+	Error = DB.Get(&User, "SELECT * FROM users WHERE id = $1", id)
 	return
 }
 
 // GetUserByUsername returns a user based on their username
 func GetUserByUsername(username string) (User User, Error error) {
-	Error = DB.Get(&User, "SELECT * FROM users WHERE username = ?", username)
+	Error = DB.Get(&User, "SELECT * FROM users WHERE username = $1", username)
 	return
 }
 
@@ -162,12 +166,12 @@ func (r *Reply) Create() (Error error) {
 
 // Create saves a vote
 func (v *Vote) Create() (CurrentVotes int32, Error error) {
-	Error = DB.Get(&CurrentVotes, "SELECT votes FROM posts WHERE id = ?", v.PostID)
+	Error = DB.Get(&CurrentVotes, "SELECT votes FROM posts WHERE id = $1", v.PostID)
 	if Error == nil {
 		insertQuery := "INSERT INTO votes VALUES (:userID, :postID)"
 		if _, Error = DB.NamedExec(insertQuery, v); Error == nil {
 			CurrentVotes++
-			updateQuery := "UPDATE posts SET votes = ? WHERE id = ?"
+			updateQuery := "UPDATE posts SET votes = $1 WHERE id = $2"
 			if _, Error = DB.Exec(updateQuery, CurrentVotes, v.PostID); Error == nil {
 				return CurrentVotes, Error
 			}
@@ -179,7 +183,7 @@ func (v *Vote) Create() (CurrentVotes int32, Error error) {
 // Exists checks if a post has already been saved
 func (v *Vote) Exists() (Exists bool) {
 	var userID string
-	q := "SELECT userID FROM votes WHERE userID = ? AND postID = ? LIMIT 1"
+	q := "SELECT userID FROM votes WHERE userID = $1 AND postID = $2 LIMIT 1"
 
 	if err := DB.Get(&userID, q, v.UserID, v.PostID); err == nil {
 		return true
@@ -189,13 +193,13 @@ func (v *Vote) Exists() (Exists bool) {
 
 // GetPost returns a post based on the post's ID
 func GetPost(ID string) (Post Post, Error error) {
-	Error = DB.Get(&Post, "SELECT * FROM posts WHERE id = ?", ID)
+	Error = DB.Get(&Post, "SELECT * FROM posts WHERE id = $1", ID)
 	return
 }
 
 // GetComment returns a top-level comment based on the comment's ID
 func GetComment(ID string) (Comment Comment, Error error) {
-	Error = DB.Get(&Comment, "SELECT * FROM comments WHERE id = ?", ID)
+	Error = DB.Get(&Comment, "SELECT * FROM comments WHERE id = $1", ID)
 	return
 }
 
@@ -219,27 +223,27 @@ func GetRecentComments() (Comments []Comment, Error error) {
 
 // GetPosts populates a list of the users posts
 func (u *User) GetPosts() (Error error) {
-	Error = DB.Select(&u.Posts, "SELECT * FROM posts WHERE userID = ? ORDER BY created DESC", u.ID)
+	Error = DB.Select(&u.Posts, "SELECT * FROM posts WHERE userID = $1 ORDER BY created DESC", u.ID)
 	return
 }
 
 // GetComments populates a list of comments on a post
 func (p *Post) GetComments() (Error error) {
-	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postID = ? ORDER BY created ASC", p.ID)
+	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postID = $1 ORDER BY created ASC", p.ID)
 	return
 }
 
 // GetCommentReplies populates the replies for each comment on a post
 func (p *Post) GetCommentReplies() {
 	for i, comment := range p.Comments {
-		DB.Select(&p.Comments[i].Replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", comment.ID)
+		DB.Select(&p.Comments[i].Replies, "SELECT * FROM replies WHERE parentID = $1 ORDER BY created ASC", comment.ID)
 	}
 }
 
 // GetReplies populates a list of replies to a comment
 func (c *Comment) GetReplies() (Error error) {
 	var replies []Reply
-	Error = DB.Select(&replies, "SELECT * FROM replies WHERE parentID = ? ORDER BY created ASC", c.ID)
+	Error = DB.Select(&replies, "SELECT * FROM replies WHERE parentID = $1 ORDER BY created ASC", c.ID)
 	c.Replies = replies
 	return
 }
@@ -247,7 +251,7 @@ func (c *Comment) GetReplies() (Error error) {
 // GetParent populates a comment's parent post data
 func (c *Comment) GetParent() (Error error) {
 	var parent Post
-	Error = DB.Get(&parent, "SELECT * FROM posts WHERE id = ?", c.PostID)
+	Error = DB.Get(&parent, "SELECT * FROM posts WHERE id = $1", c.PostID)
 	c.Parent = &parent
 	return
 }
