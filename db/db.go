@@ -4,16 +4,68 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"site/config"
 	"time"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	// Needed for sqlx
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
 
 	"golang.org/x/crypto/bcrypt"
 )
+
+const postSchema = `
+CREATE TABLE IF NOT EXISTS posts (
+	id text NOT NULL,
+	userid text NOT NULL,
+	author text NOT NULL,
+	title text NOT NULL,
+	body text NOT NULL,
+	gamerrage integer DEFAULT 0,
+	votes int DEFAULT 0,
+	created timestamp DEFAULT current_timestamp
+)
+`
+
+const userSchema = `
+CREATE TABLE IF NOT EXISTS users (
+	id text NOT NULL,
+	username text NOT NULL,
+	password text NOT NULL,
+	created timestamp DEFAULT current_timestamp
+)
+`
+
+const commentSchema = `
+CREATE TABLE IF NOT EXISTS comments (
+	id text NOT NULL,
+	postid text NOT NULL,
+	userid text NOT NULL,
+	author text NOT NULL,
+	body text NOT NULL,
+	created timestamp DEFAULT current_timestamp
+)
+`
+
+const replySchema = `
+CREATE TABLE IF NOT EXISTS replies (
+	id text NOT NULL,
+	parentid text NOT NULL,
+	userid text NOT NULL,
+	author text NOT NULL,
+	body text NOT NULL,
+	created timestamp DEFAULT current_timestamp
+)
+`
+
+const voteSchema = `
+CREATE TABLE IF NOT EXISTS votes (
+	userid text NOT NULL,
+	postid text NOT NULL
+)
+`
 
 // DB is the database connection itself
 var DB *sqlx.DB
@@ -23,60 +75,64 @@ var Sessions = make(map[string]string)
 
 // User representation
 type User struct {
-	ID       string
+	ID       string `db:"id"`
 	Username string
 	Password string
-	Created  string
+	Created  time.Time
 	Posts    []Post
 }
 
 // Post representation
 type Post struct {
 	ID        string `db:"id"`
-	GamerRage int `db:"gamerRage"`
-	UserID    string `db:"userID"`
+	UserID    string `db:"userid"`
 	Author    string
 	Title     string
 	Body      string
-	Created  time.Time
-	Votes     uint
+	GamerRage int `db:"gamerrage" json:"gamerrage"`
+	Votes     int
+	Created   time.Time
 	Comments  []Comment
 }
 
 // Comment representation
 type Comment struct {
 	ID      string `db:"id"`
-	UserID  string `db:"userID"`
+	UserID  string `db:"userid"`
 	Author  string
 	Body    string
-	PostID  string `db:"postID" json:"postid"`
-	Created string
+	PostID  string `db:"postid" json:"postid"`
+	Created time.Time
 	Replies []Reply
 	Parent  *Post
 }
 
 // Reply representation
 type Reply struct {
-	ParentID string `db:"parentID" json:"parentid"`
+	ParentID string `db:"parentid" json:"parentid"`
 	ID       string `db:"id"`
-	UserID   string `db:"userID"`
+	UserID   string `db:"userid"`
 	Author   string
 	Body     string
-	Created  string
+	Created  time.Time
 }
 
 // Vote representation
 type Vote struct {
-	UserID string `db:"userID"`
-	PostID string `db:"postID"`
+	UserID string `db:"userid"`
+	PostID string `db:"postid"`
 }
 
 // Init initializes and checks the DB connection for errors
-func Init(url string) {
-	DB, err := sqlx.Connect("pgx", url)
-	if err != nil {
-		log.Fatal(err)
-	}
+func init() {
+	DB, _ = sqlx.Connect("pgx", config.Config.DatabaseURL)
+
+	DB.MustExec(postSchema)
+	DB.MustExec(userSchema)
+	DB.MustExec(voteSchema)
+	DB.MustExec(commentSchema)
+	DB.MustExec(replySchema)
+
 	if DB.Ping() != nil {
 		log.Fatal("Error connecting to database")
 	}
@@ -111,7 +167,7 @@ func CheckLogin(username, password string) (User User, Error error) {
 func CreateUser(username, password string) (Error error) {
 	id := uuid.NewV4()
 	if password, Error = HashPassword(password); Error == nil {
-		_, Error = DB.Exec("INSERT INTO users VALUES ($1, ?, ?, NOW())", id, username, password)
+		_, Error = DB.Exec("INSERT INTO users VALUES ($1, $2, $3)", id, username, password)
 	}
 	return
 }
@@ -134,7 +190,7 @@ func (p *Post) Create() (Error error) {
 	user, Error := GetUserByID(p.UserID)
 	if Error == nil {
 		p.Author = user.Username
-		q := "INSERT INTO posts VALUES (:id, :userID, :author, :title, :body, :gamerRage, :votes, NOW())"
+		q := "INSERT INTO posts VALUES (:id, :userid, :author, :title, :body, :gamerrage, :votes)"
 		_, Error = DB.NamedExec(q, p)
 	}
 	return
@@ -147,7 +203,7 @@ func (c *Comment) Create() (Error error) {
 	user, _ := GetUserByID(c.UserID)
 	c.Author = user.Username
 
-	q := "INSERT INTO comments VALUES (:id, :postID, :userID, :author, :body, NOW())"
+	q := "INSERT INTO comments VALUES (:id, :postid, :userid, :author, :body)"
 	_, Error = DB.NamedExec(q, c)
 	return
 }
@@ -159,7 +215,7 @@ func (r *Reply) Create() (Error error) {
 	user, _ := GetUserByID(r.UserID)
 	r.Author = user.Username
 
-	q := "INSERT INTO replies VALUES (:id, :parentID, :userID, :author, :body, NOW())"
+	q := "INSERT INTO replies VALUES (:id, :parentid, :userid, :author, :body)"
 	_, Error = DB.NamedExec(q, r)
 	return
 }
@@ -168,7 +224,7 @@ func (r *Reply) Create() (Error error) {
 func (v *Vote) Create() (CurrentVotes int32, Error error) {
 	Error = DB.Get(&CurrentVotes, "SELECT votes FROM posts WHERE id = $1", v.PostID)
 	if Error == nil {
-		insertQuery := "INSERT INTO votes VALUES (:userID, :postID)"
+		insertQuery := "INSERT INTO votes VALUES (:userid, :postid)"
 		if _, Error = DB.NamedExec(insertQuery, v); Error == nil {
 			CurrentVotes++
 			updateQuery := "UPDATE posts SET votes = $1 WHERE id = $2"
@@ -183,7 +239,7 @@ func (v *Vote) Create() (CurrentVotes int32, Error error) {
 // Exists checks if a post has already been saved
 func (v *Vote) Exists() (Exists bool) {
 	var userID string
-	q := "SELECT userID FROM votes WHERE userID = $1 AND postID = $2 LIMIT 1"
+	q := "SELECT userid FROM votes WHERE userid = $1 AND postid = $2 LIMIT 1"
 
 	if err := DB.Get(&userID, q, v.UserID, v.PostID); err == nil {
 		return true
@@ -223,27 +279,27 @@ func GetRecentComments() (Comments []Comment, Error error) {
 
 // GetPosts populates a list of the users posts
 func (u *User) GetPosts() (Error error) {
-	Error = DB.Select(&u.Posts, "SELECT * FROM posts WHERE userID = $1 ORDER BY created DESC", u.ID)
+	Error = DB.Select(&u.Posts, "SELECT * FROM posts WHERE userid = $1 ORDER BY created DESC", u.ID)
 	return
 }
 
 // GetComments populates a list of comments on a post
 func (p *Post) GetComments() (Error error) {
-	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postID = $1 ORDER BY created ASC", p.ID)
+	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postid = $1 ORDER BY created ASC", p.ID)
 	return
 }
 
 // GetCommentReplies populates the replies for each comment on a post
 func (p *Post) GetCommentReplies() {
 	for i, comment := range p.Comments {
-		DB.Select(&p.Comments[i].Replies, "SELECT * FROM replies WHERE parentID = $1 ORDER BY created ASC", comment.ID)
+		DB.Select(&p.Comments[i].Replies, "SELECT * FROM replies WHERE parentid = $1 ORDER BY created ASC", comment.ID)
 	}
 }
 
 // GetReplies populates a list of replies to a comment
 func (c *Comment) GetReplies() (Error error) {
 	var replies []Reply
-	Error = DB.Select(&replies, "SELECT * FROM replies WHERE parentID = $1 ORDER BY created ASC", c.ID)
+	Error = DB.Select(&replies, "SELECT * FROM replies WHERE parentid = $1 ORDER BY created ASC", c.ID)
 	c.Replies = replies
 	return
 }

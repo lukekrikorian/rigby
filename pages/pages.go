@@ -5,11 +5,18 @@ import (
 	"html/template"
 	"net/http"
 	"site/db"
+	"time"
 
 	"github.com/gorilla/mux"
 )
 
-var templates = template.Must(template.ParseGlob("templates/*"))
+var templates = template.Must(template.New("temp.html").Funcs(funcMap).ParseGlob("templates/[^.]*"))
+
+var funcMap = template.FuncMap{
+	"prettyTime": func(t time.Time) string {
+		return t.Format("2006-01-02")
+	},
+}
 
 // NotFound is the 404 page page
 var NotFound = templates.Lookup("404")
@@ -126,6 +133,7 @@ func Browse(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		fmt.Println(err)
 		NotFound.Execute(w, nil)
 		return
 	}

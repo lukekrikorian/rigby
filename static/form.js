@@ -8,7 +8,7 @@ form.addEventListener("submit", function (e) {
 	form.childNodes.forEach(function (child) {
 		if (!child.type || child.type === "submit") return;
 		if (child.type === "checkbox") {
-			data[child.name] = child.checked;
+			data[child.name] = child.checked ? 1 : 0;
 			return;
 		}
 		data[child.name] = child.value;

@@ -9,12 +9,8 @@ import (
 
 // Configuration structure for the project
 type Configuration struct {
-	Database struct {
-		Username string
-		Password string
-		Database string
-	}
-	Server struct {
+	DatabaseURL string `json:"database"`
+	Server      struct {
 		Port   int32
 		Origin string
 	}
@@ -28,7 +24,7 @@ type Configuration struct {
 var Config Configuration
 
 // Init fetches the file data and decodes it, setting up the config
-func Init() {
+func init() {
 	configFile, err := os.Open("config.json")
 	if err != nil {
 		log.Fatal("Error opening config.json file. Does it exist?")

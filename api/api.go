@@ -196,6 +196,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	var post db.Post
 
 	if err := decoder.Decode(&post); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Request was malformed", 500)
 		return
 	}

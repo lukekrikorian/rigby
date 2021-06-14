@@ -7,18 +7,18 @@
 		<div class="centerWrap">
 			<div class="center {{ if .GamerRage }} gamerRage {{- end -}}">
 				<h3>{{ .Title }}</h3>
-				<p class="inline" id="authorLink">By <a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+				<p class="inline" id="authorLink">By <a href="/~{{ .Author }}">{{ .Author }}</a> on {{ prettyTime .Created }}</p>
 				<p class="inline floatRight"><a href="/api/vote/{{ .ID }}" id="voteButton">{{ .Votes }} Votes</a></p>
 				<pre>{{ .Body }}</pre>
 				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end -}}
 				<div class="comments">
 				{{ range .Comments }}
 					<div class="comment" id="{{ .ID }}">
-						<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+						<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ prettyTime .Created }}</p>
 						<p class="commentBody">{{ .Body }}</p>
 						{{ range .Replies }}
 							<div class="reply">
-								<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ printf "%.10s" .Created }}</p>
+								<p class="dark"><a href="/~{{ .Author }}">{{ .Author }}</a> on {{ prettyTime .Created }}</p>
 								<p class="replyBody">{{ .Body }}</p>
 							</div>
 						{{ end }}
