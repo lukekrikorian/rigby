@@ -5,3 +5,4 @@ site
 client
 backup.sql
 output.log
+*.swp
