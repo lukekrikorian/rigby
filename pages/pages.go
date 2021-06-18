@@ -63,7 +63,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 			post.Comments[i].GetReplies()
 		}
 
-		templates.ExecuteTemplate(w, "posts", post)
+		templates.ExecuteTemplate(w, "post", post)
 	} else {
 		fmt.Println(err)
 		NotFound.Execute(w, nil)

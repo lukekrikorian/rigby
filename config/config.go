@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 )
@@ -14,10 +13,6 @@ type Configuration struct {
 		Port   int32
 		Origin string
 	}
-	HTTPS struct {
-		Certificate string
-		Key         string
-	} `json:"https"`
 }
 
 // Config is the actual config data
@@ -28,7 +23,6 @@ func init() {
 	configFile, err := os.Open("config.json")
 	if err != nil {
 		log.Fatal("Error opening config.json file. Does it exist?")
-		configFile.Close()
 		return
 	}
 
@@ -40,5 +34,5 @@ func init() {
 		log.Fatal("Error parsing json in config file.")
 	}
 
-	fmt.Println("Parsed config file")
+	log.Println("Parsed config file")
 }

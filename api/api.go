@@ -210,8 +210,8 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if l := len(post.Body); l < 3 || l > 5000 {
-		http.Error(w, "Post body must be within 3 and 5000 characters", 500)
+	if l := len(post.Body); l < 3 || l > 10000 {
+		http.Error(w, "Post body must be within 3 and 10000 characters", 500)
 		return
 	}
 
@@ -222,7 +222,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusSeeOther)
-	fmt.Fprintf(w, "/posts/%s", post.ID)
+	fmt.Fprintf(w, "/post/%s", post.ID)
 }
 
 // Vote endpoint (/api/vote/{post} POST)

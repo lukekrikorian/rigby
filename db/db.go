@@ -67,6 +67,13 @@ CREATE TABLE IF NOT EXISTS votes (
 )
 `
 
+const sessionSchema = `
+CREATE TABLE IF NOT EXISTS sessions (
+	token text NOT NULL,
+	userid text NOT NULL
+)
+`
+
 // DB is the database connection itself
 var DB *sqlx.DB
 
@@ -132,10 +139,13 @@ func init() {
 	DB.MustExec(voteSchema)
 	DB.MustExec(commentSchema)
 	DB.MustExec(replySchema)
+	DB.MustExec(sessionSchema)
 
 	if DB.Ping() != nil {
 		log.Fatal("Error connecting to database")
 	}
+
+	LoadSessions()
 }
 
 // CheckAuth validates a request session
@@ -245,6 +255,25 @@ func (v *Vote) Exists() (Exists bool) {
 		return true
 	}
 	return false
+}
+
+// LoadSessions loads the user sessions
+func LoadSessions() {
+	rows, _ := DB.Query("SELECT * FROM sessions")
+
+	for rows.Next() {
+		var token, id string
+		rows.Scan(&token, &id)
+		Sessions[token] = id
+	}
+}
+
+// SaveSessions saves the server sessions
+func SaveSessions() {
+	DB.Exec("DELETE FROM sessions")
+	for token, id := range Sessions {
+		DB.Exec("INSERT INTO sessions VALUES ($1, $2)", token, id)
+	}
 }
 
 // GetPost returns a post based on the post's ID

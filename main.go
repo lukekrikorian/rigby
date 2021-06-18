@@ -1,14 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"strings"
 	"time"
 
 	"site/api"
 	"site/config"
+	"site/db"
 	"site/pages"
 
 	"github.com/gorilla/handlers"
@@ -24,8 +28,8 @@ func main() {
 
 	r.HandleFunc("/", pages.Index).Methods("GET")
 	r.HandleFunc("/~{username}", pages.Profile).Methods("GET")
-	r.HandleFunc("/posts/{post}.txt", pages.StaticPost).Methods("GET")
-	r.HandleFunc("/posts/{post}", pages.Post).Methods("GET")
+	r.HandleFunc("/post/{post}.txt", pages.StaticPost).Methods("GET")
+	r.HandleFunc("/post/{post}", pages.Post).Methods("GET")
 	r.HandleFunc("/comment/{post}", pages.Comment).Methods("GET")
 	r.HandleFunc("/reply/{comment}", pages.Reply).Methods("GET")
 	r.HandleFunc("/browse/{page}", pages.Browse).Methods("GET")
@@ -52,16 +56,17 @@ func main() {
 		Handler:      handlers.CORS(options)(r),
 	}
 
-	var err error
-	if config.Config.Server.Port == 443 {
-		go func() {
-			http.ListenAndServe(":80", http.HandlerFunc(redirectTLS))
-		}()
-		srv.ListenAndServeTLS(config.Config.HTTPS.Certificate, config.Config.HTTPS.Key)
-	} else {
-		srv.ListenAndServe()
-	}
-	log.Fatal(err)
+	go func() {
+		err := srv.ListenAndServe()
+		log.Fatal(err)
+	}()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+	<-stop
+
+	db.SaveSessions()
+	srv.Shutdown(context.Background())
 }
 
 func removeDirectories(next http.Handler) http.Handler {
@@ -72,9 +77,4 @@ func removeDirectories(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
-}
-
-func redirectTLS(w http.ResponseWriter, r *http.Request) {
-	redirectURL := fmt.Sprintf("https://%s%s", r.Host, r.RequestURI)
-	http.Redirect(w, r, redirectURL, http.StatusMovedPermanently)
 }

@@ -10,7 +10,7 @@
 				<p id="dateJoined" style="margin-top: 5px">joined on {{ prettyTime .Created }}</p>
 				{{ if .Posts }}<h3>Posts</h3>{{- end -}}
 				{{ range .Posts }}
-				<p class="linkList"><span class="dark">↑{{ .Votes }} </span><a href="/posts/{{ .ID }}">{{ .Title }}</a></p>
+				<p class="linkList"><span class="dark">↑{{ .Votes }} </span>{{ template "postlink" . }}</a></p>
 				{{ end }}
 			</div>
 		</div>
