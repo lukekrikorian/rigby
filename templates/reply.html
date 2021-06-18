@@ -6,7 +6,10 @@
 		{{ template "header" }}
 		<div class="centerWrap">
 				<div class="center">
-					<h3>Reply to <a href="/~{{ .Author }}">{{ .Author }}</a>'s <a href="/posts/{{ .PostID }}#{{ .ID }}">comment</a></h3>
+					<h3>
+						Reply to 
+						{{ template "userlink" .Author }}'s comment 
+					</h3>
 					<form method="POST" action="/api/replies" parentid="{{ .ID }}">
 						<input type="textarea" name="body" placeholder="Actually..."/>
 						<input type="submit" value="Reply"/>

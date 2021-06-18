@@ -1,0 +1,20 @@
+{{ define "userlink" -}}
+<a href="/~{{ . }}">{{ . }}</a>
+{{- end }}
+
+{{ define "postlink" -}}
+<a href="/posts/{{ .ID }}">{{ .Title }}</a>
+{{- end }}
+
+{{ define "commentlink" -}}
+<a href="/posts/{{ .PostID }}#{{ .ID }}">{{ .Parent.Title }}</a>
+{{- end }}
+
+{{ define "commentHeader" -}}
+<p class="dark">{{ template "userAndDate" . }}</p>
+{{- end }}
+
+{{ define "userAndDate" -}}
+{{ template "userlink" .Author }} on
+{{ prettyTime .Created }}
+{{- end }}

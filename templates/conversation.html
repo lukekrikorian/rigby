@@ -9,12 +9,17 @@
 					<h2>People Talkin</h2>
 					{{ range . }}
 						<div class="linkList comment">
-							<p><a href="/~{{ .Author }}">{{ .Author }}</a> on <a href="/posts/{{ .PostID }}#{{ .ID }}">{{ .Parent.Title }}</a></p>
+							<p>
+								{{ template "userlink" .Author }} on
+								{{ template "commentlink" . }}
+							</p>
 							<p class="commentBody">{{ .Body }}</p>
 						</div>
 						{{ range .Replies }}
 							<div class="reply">
-								<p class="replyLink"><a href="/~{{ .Author }}">{{ .Author }}</a></p>
+								<p class="replyLink">
+									{{ template "userlink" .Author }}
+								</p>
 								<p class="replyBody">{{ .Body }}</p>
 							</div>
 						{{ end }}

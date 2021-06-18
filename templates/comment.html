@@ -6,7 +6,7 @@
 		{{ template "header" }}
 		<div class="centerWrap">
 			<div class="center">
-				<h3>Reply to <a href="/posts/{{ .ID }}">{{ .Title }}</a></h3>
+				<h3>Reply to {{ template "postlink" . }}</h3>
 				<form method="POST" action="/api/comments" postid="{{ .ID }}">
 					<input type="textarea" name="body" placeholder="Post a comment"/>
 					<input type="submit" value="Comment"/>
