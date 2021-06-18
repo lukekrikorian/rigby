@@ -11,7 +11,7 @@
 				<p class="inline floatRight">
 					<a href="/api/vote/{{ .ID }}" id="voteButton">{{ .Votes }} Votes</a>
 				</p>
-				<pre>{{ .Body }}</pre>
+				<div>{{ markdown .Body }}</div>
 				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end -}}
 				<div class="comments">
 				{{ range .Comments }}

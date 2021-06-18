@@ -8,13 +8,20 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	md "github.com/russross/blackfriday/v2"
 )
 
 var templates = template.Must(template.New("temp.html").Funcs(funcMap).ParseGlob("templates/[^.]*"))
 
+var options = md.NoIntraEmphasis | md.FencedCode | md.Autolink | md.Strikethrough | md.HeadingIDs
+
 var funcMap = template.FuncMap{
 	"prettyTime": func(t time.Time) string {
 		return t.Format("2006-01-02")
+	},
+	"markdown": func(s string) template.HTML {
+		body := md.Run([]byte(s), md.WithExtensions(options))
+		return template.HTML(string(body))
 	},
 }
 

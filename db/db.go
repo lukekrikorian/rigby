@@ -266,6 +266,8 @@ func LoadSessions() {
 		rows.Scan(&token, &id)
 		Sessions[token] = id
 	}
+
+	log.Println("Loaded user sessions")
 }
 
 // SaveSessions saves the server sessions
@@ -274,6 +276,8 @@ func SaveSessions() {
 	for token, id := range Sessions {
 		DB.Exec("INSERT INTO sessions VALUES ($1, $2)", token, id)
 	}
+
+	log.Println("Saved user sessions")
 }
 
 // GetPost returns a post based on the post's ID
