@@ -141,7 +141,7 @@ func CreateComment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusSeeOther)
-	fmt.Fprintf(w, "/posts/%s", comment.PostID)
+	fmt.Fprintf(w, "/post/%s", comment.PostID)
 }
 
 // CreateReply endpoint (/api/replies POST)
@@ -177,7 +177,7 @@ func CreateReply(w http.ResponseWriter, r *http.Request) {
 	comment, err := db.GetComment(reply.ParentID)
 	if err == nil {
 		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/posts/%s#%s", comment.PostID, reply.ID)
+		fmt.Fprintf(w, "/post/%s#%s", comment.PostID, reply.ID)
 	} else {
 		w.WriteHeader(http.StatusSeeOther)
 		fmt.Fprintf(w, "/")
@@ -252,7 +252,7 @@ func Vote(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Post endpoint (/api/posts/{post} GET)
+// Post endpoint (/api/post/{post} GET)
 func Post(w http.ResponseWriter, r *http.Request) {
 	postID := mux.Vars(r)["post"]
 	post, err := db.GetPost(postID)
