@@ -18,3 +18,35 @@
 {{ template "userlink" .Author }} on
 {{ prettyTime .Created }}
 {{- end }}
+
+{{ define "replyForm" -}}
+<details class="replyform">
+	<summary>new reply</summary>
+	<form method="POST" action="/api/replies">
+		<input type="hidden" name="parentid" value="{{ .ID }}"/>
+		<textarea name="body" placeholder="Actually..."></textarea>
+		<br>
+		<input type="submit" value="Reply"/>
+	</form>
+</details>
+{{- end }}
+
+{{ define "comment" -}}
+<div class="comment">
+	<div class="target" id="{{ .ID }}">
+	{{ template "userlink" .Author }} on
+	<a href="/post/{{ .PostID }}#{{ .ID }}">{{ prettyTime .Created }}</a>
+	<p class="body">{{ .Body }}</p>
+	</div>
+	<div class="replies">
+	{{ range .Replies }}
+		<div class="reply target" id="{{ .ID }}">
+			{{ template "userlink" .Author }} on
+			<a href="/post/{{ $.PostID }}#{{ .ID }}">{{ prettyTime .Created }}</a>
+			<p class="body">{{ .Body }}</p>
+		</div>
+	{{ end }}
+	{{ template "replyForm" . }}
+	</div>
+</div>
+{{- end}}

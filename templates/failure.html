@@ -1,0 +1,10 @@
+{{ define "failure" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" "Request failed" }}
+	<body>
+		{{ template "header" }}
+		<p id="failure">{{ . }}</p>
+	</body>
+</html>
+{{ end }}

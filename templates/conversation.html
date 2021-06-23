@@ -8,21 +8,7 @@
 				<div class="center">
 					<h2>People Talkin</h2>
 					{{ range . }}
-						<div class="linkList comment">
-							<p>
-								{{ template "userlink" .Author }} on
-								{{ template "commentlink" . }}
-							</p>
-							<p class="commentBody">{{ .Body }}</p>
-						</div>
-						{{ range .Replies }}
-							<div class="reply">
-								<p class="replyLink">
-									{{ template "userlink" .Author }}
-								</p>
-								<p class="replyBody">{{ .Body }}</p>
-							</div>
-						{{ end }}
+						{{ template "comment" . }}
 					{{ end }}
 				</div>
 			</div>

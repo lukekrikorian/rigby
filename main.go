@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 
 	"site/api"
@@ -52,7 +53,7 @@ func main() {
 		Addr:         fmt.Sprintf(":%d", config.Config.Server.Port),
 		WriteTimeout: time.Second * 10,
 		ReadTimeout:  time.Second * 10,
-		IdleTimeout:  time.Second * 30,
+		IdleTimeout:  time.Second * 10,
 		Handler:      handlers.CORS(options)(r),
 	}
 
@@ -62,8 +63,10 @@ func main() {
 	}()
 
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
 	<-stop
+
+	print("\n")
 
 	db.SaveSessions()
 	srv.Shutdown(context.Background())

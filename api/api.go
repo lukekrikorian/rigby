@@ -6,93 +6,85 @@ import (
 	"net/http"
 	"regexp"
 	"site/db"
+	"site/pages"
 	"strings"
 
 	"github.com/gorilla/mux"
 
+	"github.com/gorilla/schema"
 	uuid "github.com/satori/go.uuid"
 )
 
 var signupRegex = regexp.MustCompile("^[a-zA-Z0-9_]+$")
+var decoder = schema.NewDecoder()
 
-type signupJSON struct {
-	Username string
-	Password string
+func fail(w http.ResponseWriter, m string) {
+	w.WriteHeader(500)
+	pages.Failure.Execute(w, m)
+}
+
+func auth(w http.ResponseWriter, r *http.Request) (UserID string, Error error) {
+	if UserID, Error = db.CheckAuth(r); Error != nil {
+		fail(w, "You aren't logged in.")
+	}
+	return
 }
 
 // Signup endpoint (/api/signup POST)
 func Signup(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	var signup signupJSON
+	r.ParseForm()
+	username, password := r.FormValue("username"), r.FormValue("password")
 
-	if err := decoder.Decode(&signup); err != nil {
-		http.Error(w, "Invalid signup", 500)
+	if l := len(username); l < 3 || l > 16 {
+		fail(w, "Your username must be within 3 and 16 characters long")
 		return
 	}
 
-	if l := len(signup.Username); l < 3 || l > 16 {
-		http.Error(w, "Your username must be within 3 and 16 characters long", 500)
+	if l := len(password); l < 5 || l > 50 {
+		fail(w, "Your password must be within 5 and 50 characters long")
 		return
 	}
 
-	if l := len(signup.Password); l < 5 || l > 50 {
-		http.Error(w, "Your password must be within 5 and 50 characters long", 500)
+	if _, err := db.GetUserByUsername(username); err == nil {
+		fail(w, "A user with that username already exists")
 		return
 	}
 
-	if _, err := db.GetUserByUsername(signup.Username); err == nil {
-		http.Error(w, "A user with that username already exists", 500)
+	if !signupRegex.MatchString(username) {
+		fail(w, "Usernames can only contain numbers, letters, and underscores")
 		return
 	}
 
-	if !signupRegex.MatchString(signup.Username) {
-		http.Error(w, "Usernames can only contain numbers, letters, and underscores", 500)
-		return
-	}
-
-	err := db.CreateUser(signup.Username, signup.Password)
+	err := db.CreateUser(username, password)
 	if err != nil {
-		fmt.Println(err.Error())
-		http.Error(w, "Could not create user", 500)
-	} else {
-		fmt.Println("New user", signup.Username)
-		http.Redirect(w, r, "/api/login", http.StatusTemporaryRedirect)
+		fail(w, "Couldn't create user")
+		return
 	}
-}
 
-type loginJSON struct {
-	Username string
-	Password string
+	http.Redirect(w, r, "/api/login", 307)
 }
 
 // Login endpoint (/api/login POST)
 func Login(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 
-	decoder := json.NewDecoder(r.Body)
-	var login loginJSON
-
-	if err := decoder.Decode(&login); err != nil {
-		http.Error(w, "Incorrect login", 500)
+	user, err := db.CheckLogin(r.FormValue("username"), r.FormValue("password"))
+	if err != nil {
+		fail(w, "Incorrect username or password")
 		return
 	}
 
-	if user, err := db.CheckLogin(login.Username, login.Password); err == nil {
+	sessionID := uuid.NewV4().String()
+	db.Sessions[sessionID] = user.ID
 
-		sessionID := uuid.NewV4().String()
-		db.Sessions[sessionID] = user.ID
-
-		sessionCookie := &http.Cookie{
-			Name:  "session",
-			Value: sessionID,
-			Path:  "/",
-		}
-		http.SetCookie(w, sessionCookie)
-
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/")
-		return
+	sessionCookie := &http.Cookie{
+		Name:  "session",
+		Value: sessionID,
+		Path:  "/",
 	}
-	http.Error(w, "Incorrect login", 500)
+	http.SetCookie(w, sessionCookie)
+
+	http.Redirect(w, r, "/", 303)
 }
 
 // Logout endpoint (/logout GET)
@@ -112,56 +104,53 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 // CreateComment endpoint (/api/comments POST)
 func CreateComment(w http.ResponseWriter, r *http.Request) {
-	userID, err := db.CheckAuth(r)
+	userID, err := auth(w, r)
 	if err != nil {
-		http.Error(w, "You aren't logged in", 500)
 		return
 	}
 
-	decoder := json.NewDecoder(r.Body)
+	r.ParseForm()
 	var comment db.Comment
 
-	if err := decoder.Decode(&comment); err != nil {
-		http.Error(w, "Request was malformed", 500)
+	if err := decoder.Decode(&comment, r.Form); err != nil {
+		fail(w, "Request was malformed")
 		return
 	}
 
 	comment.UserID = userID
 
 	if l := len(comment.Body); l < 3 || l > 1000 {
-		http.Error(w, "Comment must be within 3 and 1000 characters", 500)
+		fail(w, "Comment must be within 3 and 1000 characters")
 		return
 	}
 
 	err = comment.Create()
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Error saving comment", 500)
+		fail(w, "Error saving comment")
 		return
 	}
 
-	w.WriteHeader(http.StatusSeeOther)
-	fmt.Fprintf(w, "/post/%s", comment.PostID)
+	http.Redirect(w, r, fmt.Sprintf("/post/%s#%s", comment.PostID, comment.ID), 303)
 }
 
 // CreateReply endpoint (/api/replies POST)
 func CreateReply(w http.ResponseWriter, r *http.Request) {
-	userID, err := db.CheckAuth(r)
+	userID, err := auth(w, r)
 	if err != nil {
-		http.Error(w, "You aren't logged in", 500)
 		return
 	}
 
-	decoder := json.NewDecoder(r.Body)
+	r.ParseForm()
 	var reply db.Reply
 
-	if err := decoder.Decode(&reply); err != nil {
-		http.Error(w, "Request was malformed", 500)
+	if err := decoder.Decode(&reply, r.PostForm); err != nil {
+		fail(w, "Request was malformed")
 		return
 	}
 
 	if l := len(reply.Body); l < 3 || l > 1000 {
-		http.Error(w, "Reply must be within 3 and 1000 characters", 500)
+		fail(w, "Reply must be within 3 and 1000 characters")
 		return
 	}
 
@@ -170,34 +159,26 @@ func CreateReply(w http.ResponseWriter, r *http.Request) {
 	err = reply.Create()
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Error saving reply", 500)
+		fail(w, "Error saving reply")
 		return
 	}
 
-	comment, err := db.GetComment(reply.ParentID)
-	if err == nil {
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/post/%s#%s", comment.PostID, reply.ID)
-	} else {
-		w.WriteHeader(http.StatusSeeOther)
-		fmt.Fprintf(w, "/")
-	}
+	http.Redirect(w, r, fmt.Sprintf("%s#%s", r.Referer(), reply.ID), 303)
 }
 
 // CreatePost endpoint (/api/post POST)
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	userID, err := db.CheckAuth(r)
+	userID, err := auth(w, r)
 	if err != nil {
-		http.Error(w, "You aren't logged in", 500)
 		return
 	}
 
-	decoder := json.NewDecoder(r.Body)
+	r.ParseForm()
 	var post db.Post
 
-	if err := decoder.Decode(&post); err != nil {
+	if err := decoder.Decode(&post, r.Form); err != nil {
 		fmt.Println(err)
-		http.Error(w, "Request was malformed", 500)
+		fail(w, "Request was malformed")
 		return
 	}
 
@@ -206,50 +187,49 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 	post.Votes = 0
 
 	if l := len(post.Title); l < 3 || l > 140 {
-		http.Error(w, "Title must be within 3 and 140 characters", 500)
+		fail(w, "Title must be within 3 and 140 characters")
 		return
 	}
 
 	if l := len(post.Body); l < 3 || l > 10000 {
-		http.Error(w, "Post body must be within 3 and 10000 characters", 500)
+		fail(w, "Body must be within 3 and 10,000 characters")
 		return
 	}
 
 	err = post.Create()
 	if err != nil {
 		fmt.Println(err)
-		http.Error(w, "Error creating post", 500)
+		fail(w, "Error creating post")
 		return
 	}
-	w.WriteHeader(http.StatusSeeOther)
-	fmt.Fprintf(w, "/post/%s", post.ID)
+	http.Redirect(w, r, fmt.Sprintf("/post/%s", post.ID), 303)
 }
 
 // Vote endpoint (/api/vote/{post} POST)
 func Vote(w http.ResponseWriter, r *http.Request) {
-	postID := mux.Vars(r)["post"]
-	userID, err := db.CheckAuth(r)
+	userID, err := auth(w, r)
 	if err != nil {
-		http.Error(w, "You aren't logged in", 500)
 		return
 	}
+
+	postID := mux.Vars(r)["post"]
+
 	vote := db.Vote{
 		UserID: userID,
 		PostID: postID,
 	}
 
 	if vote.Exists() {
-		http.Error(w, "You've already voted on that", 500)
+		fail(w, "You've already voted on that")
 		return
 	}
 
-	votes, err := vote.Create()
-	if err == nil {
-		fmt.Fprintf(w, "%d", votes)
-	} else {
+	if _, err := vote.Create(); err != nil {
 		fmt.Println(err)
-		http.Error(w, "Error saving vote", 500)
+		fail(w, "Error saving vote")
 	}
+
+	http.Redirect(w, r, fmt.Sprintf("/post/%s", vote.PostID), 303)
 }
 
 // Post endpoint (/api/post/{post} GET)

@@ -27,6 +27,7 @@ var funcMap = template.FuncMap{
 
 // NotFound is the 404 page page
 var NotFound = templates.Lookup("404")
+var Failure = templates.Lookup("failure")
 
 // Profile page
 func Profile(w http.ResponseWriter, r *http.Request) {

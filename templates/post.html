@@ -1,0 +1,34 @@
+{{ define "post" }}
+<!DOCTYPE html>
+<html>
+	{{ template "head" .Title }}
+	<body>
+		{{ template "header" . }}
+		<div class="centerWrap">
+			<div class="center {{ if .GamerRage -}} gamerRage {{- end }}">
+				<h3>{{ .Title }}</h3>
+				<p class="inline" id="authorLink">By {{ template "userAndDate" . }}</p>
+				<form class="inline" method="POST" action="/api/vote/{{ .ID }}">
+					<button type="submit" id="voteButton">{{ .Votes }} Votes</button>
+				</form>
+				<div class="postBody">{{ markdown .Body }}</div>
+				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end }}
+				<div class="comments">
+				{{ range .Comments }}
+					{{ template "comment" . }}
+				{{ end }}
+				<details style="margin-top: 8px">
+					<summary>new comment</summary>
+					<form method="POST" action="/api/comments">
+						<input type="hidden" name="postid" value="{{ .ID }}"/>
+						<textarea name="body" placeholder="However..."></textarea>
+						<br>
+						<input type="submit" value="Comment"/>
+					</form>
+				</details>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+{{ end }}

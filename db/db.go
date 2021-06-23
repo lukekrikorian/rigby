@@ -116,7 +116,7 @@ type Comment struct {
 
 // Reply representation
 type Reply struct {
-	ParentID string `db:"parentid" json:"parentid"`
+	ParentID string `db:"parentid"`
 	ID       string `db:"id"`
 	UserID   string `db:"userid"`
 	Author   string
