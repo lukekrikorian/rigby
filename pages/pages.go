@@ -13,7 +13,7 @@ import (
 
 var templates = template.Must(template.New("temp.html").Funcs(funcMap).ParseGlob("templates/[^.]*"))
 
-var options = md.NoIntraEmphasis | md.FencedCode | md.Autolink | md.Strikethrough | md.HeadingIDs
+var options = md.NoIntraEmphasis | md.FencedCode | md.Autolink | md.Strikethrough | md.HeadingIDs | md.HardLineBreak
 
 var funcMap = template.FuncMap{
 	"prettyTime": func(t time.Time) string {
