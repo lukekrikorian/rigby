@@ -8,6 +8,7 @@ import (
 	"site/db"
 	"site/pages"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 
@@ -78,9 +79,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	db.Sessions[sessionID] = user.ID
 
 	sessionCookie := &http.Cookie{
-		Name:  "session",
-		Value: sessionID,
-		Path:  "/",
+		Name:    "session",
+		Value:   sessionID,
+		Path:    "/",
+		Expires: time.Now().Add(time.Hour * 24 * 30),
 	}
 	http.SetCookie(w, sessionCookie)
 
