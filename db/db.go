@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"site/config"
+	"strings"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -97,9 +98,10 @@ type Post struct {
 	Title     string
 	Body      string
 	GamerRage int `db:"gamerrage" json:"gamerrage"`
-	Votes     int
+	VoteCount int `db:"votes"`
 	Created   time.Time
 	Comments  []Comment
+	Votes     []Vote
 }
 
 // Comment representation
@@ -126,8 +128,9 @@ type Reply struct {
 
 // Vote representation
 type Vote struct {
-	UserID string `db:"userid"`
-	PostID string `db:"postid"`
+	UserID   string `db:"userid"`
+	PostID   string `db:"postid"`
+	Username string
 }
 
 // Init initializes and checks the DB connection for errors
@@ -320,6 +323,26 @@ func (u *User) GetPosts() (Error error) {
 func (p *Post) GetComments() (Error error) {
 	Error = DB.Select(&p.Comments, "SELECT * FROM comments WHERE postid = $1 ORDER BY created ASC", p.ID)
 	return
+}
+
+// GetVotes populates a list of votes on a post
+func (p *Post) GetVotes() (Error error) {
+	Error = DB.Select(&p.Votes, "SELECT votes.*, users.username FROM votes JOIN users ON userid = id WHERE postid = $1", p.ID)
+	return
+}
+
+func (p Post) GetVoterList() string {
+	if err := p.GetVotes(); err != nil {
+		return ""
+	}
+
+	usernames := []string{}
+
+	for _, vote := range p.Votes {
+		usernames = append(usernames, vote.Username)
+	}
+
+	return strings.Join(usernames, ", ")
 }
 
 // GetCommentReplies populates the replies for each comment on a post

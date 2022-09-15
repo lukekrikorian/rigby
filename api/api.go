@@ -186,7 +186,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 
 	post.UserID = userID
 	post.Title = strings.TrimSpace(post.Title)
-	post.Votes = 0
+	post.VoteCount = 0
 
 	if l := len(post.Title); l < 3 || l > 140 {
 		fail(w, "Title must be within 3 and 140 characters")

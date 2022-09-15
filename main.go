@@ -50,7 +50,7 @@ func main() {
 	options := handlers.AllowedOrigins([]string{"localhost", config.Config.Server.Origin})
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", config.Config.Server.Port),
+		Addr:         fmt.Sprintf("localhost:%d", config.Config.Server.Port),
 		WriteTimeout: time.Second * 10,
 		ReadTimeout:  time.Second * 10,
 		IdleTimeout:  time.Second * 10,

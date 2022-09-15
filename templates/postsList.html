@@ -8,7 +8,7 @@
 				<h2>Browsin</h2>
 				{{ range . }}
 				<p class="linkList">
-					<span class="dark">↑{{ .Votes }} </span>
+					<span class="dark">↑{{ .VoteCount }} </span>
 					{{ template "postlink" . }} by 
 					{{ template "userlink" .Author }}
 				</p>

@@ -9,7 +9,7 @@
 				<h3>{{ .Title }}</h3>
 				<p class="inline" id="authorLink">By {{ template "userAndDate" . }}</p>
 				<form class="inline" method="POST" action="/api/vote/{{ .ID }}">
-					<button type="submit" id="voteButton">{{ .Votes }} Votes</button>
+					<button type="submit" id="voteButton" title="{{ .GetVoterList }}">{{ .VoteCount }} Votes</button>
 				</form>
 				<div class="postBody">{{ markdown .Body }}</div>
 				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end }}

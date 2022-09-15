@@ -6,3 +6,4 @@ client
 backup.sql
 output.log
 *.swp
+.DS_Store
