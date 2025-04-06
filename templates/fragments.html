@@ -24,7 +24,7 @@
 	<summary>new reply</summary>
 	<form method="POST" action="/api/replies">
 		<input type="hidden" name="parentid" value="{{ .ID }}"/>
-		<textarea name="body" placeholder="Actually..."></textarea>
+		<textarea name="body" minlength="3" maxlength="1000" placeholder="Actually..."></textarea>
 		<br>
 		<input type="submit" value="Reply"/>
 	</form>
