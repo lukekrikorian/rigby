@@ -7,3 +7,4 @@ backup.sql
 output.log
 *.swp
 .DS_Store
+*.db
