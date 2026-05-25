@@ -1,0 +1,27 @@
+{{ define "feed" }}
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>{{ .Title }}</title>
+    <link>{{ .URL }}</link>
+    <description>{{ .Description }}</description>
+    <language>en-us</language>
+    <image>
+      <url>{{ .FeedImageURL }}</url>
+      <title>{{ .Title }}</title>
+      <link>{{ .URL }}<link>
+    </image>
+    <ttl>30</ttl>
+    {{ range .Items }}
+      <item>
+        <title>{{ .Title }}</title>
+        <author>{{ .Author }}</author>
+        <link>{{ .URL }}</link>
+        <description>{{ .Body }}</description>
+        <pubDate>{{ .Date }}</pubDate>
+        <guid>{{ .ID }}</guid>
+      </item>
+    {{ end }}
+  </channel>
+</rss>
+{{ end }}

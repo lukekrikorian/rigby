@@ -4,30 +4,33 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"site/db"
 	"time"
+
+	"site/db"
 
 	"github.com/gorilla/mux"
 	md "github.com/russross/blackfriday/v2"
 )
 
-var templates = template.Must(template.New("temp.html").Funcs(funcMap).ParseGlob("templates/[^.]*"))
+var MarkdownOptions = md.NoIntraEmphasis | md.FencedCode | md.Autolink | md.Strikethrough | md.HeadingIDs | md.HardLineBreak
 
-var options = md.NoIntraEmphasis | md.FencedCode | md.Autolink | md.Strikethrough | md.HeadingIDs | md.HardLineBreak
-
-var funcMap = template.FuncMap{
+var FuncMap = template.FuncMap{
 	"prettyTime": func(t time.Time) string {
 		return t.Format("2006-01-02")
 	},
 	"markdown": func(s string) template.HTML {
-		body := md.Run([]byte(s), md.WithExtensions(options))
+		body := md.Run([]byte(s), md.WithExtensions(MarkdownOptions))
 		return template.HTML(string(body))
 	},
 }
 
+var templates = template.Must(template.New("temp.html").Funcs(FuncMap).ParseGlob("templates/[^.]*"))
+
 // NotFound is the 404 page page
-var NotFound = templates.Lookup("404")
-var Failure = templates.Lookup("failure")
+var (
+	NotFound = templates.Lookup("404")
+	Failure  = templates.Lookup("failure")
+)
 
 // Profile page
 func Profile(w http.ResponseWriter, r *http.Request) {

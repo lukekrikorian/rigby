@@ -13,6 +13,10 @@ type Configuration struct {
 		Port   int32
 		Origin string
 	}
+	RSS struct {
+		// E.g. http://localhost:3000 in a development configuration
+		BaseURL string `json:"baseUrl"`
+	} `json:"rss"`
 }
 
 // Config is the actual config data

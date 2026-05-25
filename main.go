@@ -15,6 +15,7 @@ import (
 	"site/config"
 	"site/db"
 	"site/pages"
+	"site/rss"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -33,6 +34,7 @@ func main() {
 	r.HandleFunc("/post/{post}", pages.Post).Methods("GET")
 	r.HandleFunc("/comment/{post}", pages.Comment).Methods("GET")
 	r.HandleFunc("/reply/{comment}", pages.Reply).Methods("GET")
+	r.HandleFunc("/browse/recent.rss", rss.RecentPostsRSS).Methods("GET")
 	r.HandleFunc("/browse/{page}", pages.Browse).Methods("GET")
 	r.HandleFunc("/conversation", pages.Conversation).Methods("GET")
 	r.HandleFunc("/{page}", pages.Pages).Methods("GET")
@@ -58,6 +60,7 @@ func main() {
 	}
 
 	go func() {
+		log.Println(fmt.Sprintf("Starting server at http://%s:%d", config.Config.Server.Origin, config.Config.Server.Port))
 		err := srv.ListenAndServe()
 		log.Fatal(err)
 	}()
