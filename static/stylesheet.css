@@ -39,7 +39,6 @@ form > input[type=text], form > input[type=password] {
 	padding: 4px;
 	border-radius: 2px;
 	box-shadow: none;
-	-webkit-appearance: none;
 }
 
 form > textarea {
