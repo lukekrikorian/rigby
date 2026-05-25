@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
-	"site/db"
-	"site/pages"
 	"strings"
 	"time"
+
+	"site/db"
+	"site/pages"
 
 	"github.com/gorilla/mux"
 
@@ -16,8 +17,10 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-var signupRegex = regexp.MustCompile("^[a-zA-Z0-9_]+$")
-var decoder = schema.NewDecoder()
+var (
+	signupRegex = regexp.MustCompile("^[a-zA-Z0-9_]+$")
+	decoder     = schema.NewDecoder()
+)
 
 func fail(w http.ResponseWriter, m string) {
 	w.WriteHeader(500)
