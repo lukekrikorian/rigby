@@ -4,82 +4,32 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"site/config"
+	"os"
 	"strings"
 	"time"
 
+	"site/config"
+
 	uuid "github.com/satori/go.uuid"
 
-	// Needed for sqlx
-	_ "github.com/jackc/pgx/stdlib"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/mattn/go-sqlite3"
 
 	"golang.org/x/crypto/bcrypt"
 )
-
-const postSchema = `
-CREATE TABLE IF NOT EXISTS posts (
-	id text NOT NULL,
-	userid text NOT NULL,
-	author text NOT NULL,
-	title text NOT NULL,
-	body text NOT NULL,
-	gamerrage integer DEFAULT 0,
-	votes int DEFAULT 0,
-	created timestamp DEFAULT current_timestamp
-)
-`
-
-const userSchema = `
-CREATE TABLE IF NOT EXISTS users (
-	id text NOT NULL,
-	username text NOT NULL,
-	password text NOT NULL,
-	created timestamp DEFAULT current_timestamp
-)
-`
-
-const commentSchema = `
-CREATE TABLE IF NOT EXISTS comments (
-	id text NOT NULL,
-	postid text NOT NULL,
-	userid text NOT NULL,
-	author text NOT NULL,
-	body text NOT NULL,
-	created timestamp DEFAULT current_timestamp
-)
-`
-
-const replySchema = `
-CREATE TABLE IF NOT EXISTS replies (
-	id text NOT NULL,
-	parentid text NOT NULL,
-	userid text NOT NULL,
-	author text NOT NULL,
-	body text NOT NULL,
-	created timestamp DEFAULT current_timestamp
-)
-`
-
-const voteSchema = `
-CREATE TABLE IF NOT EXISTS votes (
-	userid text NOT NULL,
-	postid text NOT NULL
-)
-`
-
-const sessionSchema = `
-CREATE TABLE IF NOT EXISTS sessions (
-	token text NOT NULL,
-	userid text NOT NULL
-)
-`
 
 // DB is the database connection itself
 var DB *sqlx.DB
 
 // Sessions is user session tokens: token -> userID
 var Sessions = make(map[string]string)
+
+// Migration representation
+type Migration struct {
+	ID        string `db:"id"`
+	Name      string
+	Performed time.Time
+}
 
 // User representation
 type User struct {
@@ -135,20 +85,48 @@ type Vote struct {
 
 // Init initializes and checks the DB connection for errors
 func init() {
-	DB, _ = sqlx.Connect("pgx", config.Config.DatabaseURL)
-
-	DB.MustExec(postSchema)
-	DB.MustExec(userSchema)
-	DB.MustExec(voteSchema)
-	DB.MustExec(commentSchema)
-	DB.MustExec(replySchema)
-	DB.MustExec(sessionSchema)
+	DB, _ = sqlx.Connect("sqlite3", config.Config.DatabaseURL)
 
 	if DB.Ping() != nil {
 		log.Fatal("Error connecting to database")
 	}
 
+	Migrate()
 	LoadSessions()
+}
+
+func Migrate() {
+	migrationFiles, err := os.ReadDir("db/migrations")
+	if err != nil {
+		log.Fatal("Failed to load migrations from db/migrations")
+	}
+
+	for _, file := range migrationFiles {
+		fileName := file.Name()
+		nameParts := strings.Split(fileName, ".")
+		id, name := nameParts[0], nameParts[1]
+
+		var migration Migration
+		err = DB.Get(&migration, "SELECT * FROM migrations WHERE id = $1 AND performed IS NOT NULL", id)
+		if err == nil {
+			continue
+		}
+
+		fileContents, err := os.ReadFile("db/migrations/" + fileName)
+		if err != nil {
+			log.Fatal("Failed to read migration", name)
+		}
+
+		log.Println("Applying migration", name)
+
+		tx := DB.MustBegin()
+		tx.MustExec(string(fileContents))
+		tx.MustExec("INSERT INTO migrations (id, name) VALUES ($1, $2)", id, name)
+		err = tx.Commit()
+		if err != nil {
+			log.Fatal("Error committing transaction for migration", name)
+		}
+	}
 }
 
 // CheckAuth validates a request session
@@ -180,7 +158,7 @@ func CheckLogin(username, password string) (User User, Error error) {
 func CreateUser(username, password string) (Error error) {
 	id := uuid.NewV4()
 	if password, Error = HashPassword(password); Error == nil {
-		_, Error = DB.Exec("INSERT INTO users VALUES ($1, $2, $3)", id, username, password)
+		_, Error = DB.Exec("INSERT INTO users (id, username, password) VALUES ($1, $2, $3)", id, username, password)
 	}
 	return
 }
@@ -203,7 +181,7 @@ func (p *Post) Create() (Error error) {
 	user, Error := GetUserByID(p.UserID)
 	if Error == nil {
 		p.Author = user.Username
-		q := "INSERT INTO posts VALUES (:id, :userid, :author, :title, :body, :gamerrage, :votes)"
+		q := "INSERT INTO posts (id, userid, author, title, body, gamerrage, votes) VALUES (:id, :userid, :author, :title, :body, :gamerrage, :votes)"
 		_, Error = DB.NamedExec(q, p)
 	}
 	return
@@ -216,7 +194,7 @@ func (c *Comment) Create() (Error error) {
 	user, _ := GetUserByID(c.UserID)
 	c.Author = user.Username
 
-	q := "INSERT INTO comments VALUES (:id, :postid, :userid, :author, :body)"
+	q := "INSERT INTO comments (id, postid, userid, author, body) VALUES (:id, :postid, :userid, :author, :body)"
 	_, Error = DB.NamedExec(q, c)
 	return
 }
@@ -228,7 +206,7 @@ func (r *Reply) Create() (Error error) {
 	user, _ := GetUserByID(r.UserID)
 	r.Author = user.Username
 
-	q := "INSERT INTO replies VALUES (:id, :parentid, :userid, :author, :body)"
+	q := "INSERT INTO replies (id, parentid, userid, author, body) VALUES (:id, :parentid, :userid, :author, :body)"
 	_, Error = DB.NamedExec(q, r)
 	return
 }
@@ -237,7 +215,7 @@ func (r *Reply) Create() (Error error) {
 func (v *Vote) Create() (CurrentVotes int32, Error error) {
 	Error = DB.Get(&CurrentVotes, "SELECT votes FROM posts WHERE id = $1", v.PostID)
 	if Error == nil {
-		insertQuery := "INSERT INTO votes VALUES (:userid, :postid)"
+		insertQuery := "INSERT INTO votes (userid, postid) VALUES (:userid, :postid)"
 		if _, Error = DB.NamedExec(insertQuery, v); Error == nil {
 			CurrentVotes++
 			updateQuery := "UPDATE posts SET votes = $1 WHERE id = $2"
@@ -277,7 +255,7 @@ func LoadSessions() {
 func SaveSessions() {
 	DB.Exec("DELETE FROM sessions")
 	for token, id := range Sessions {
-		DB.Exec("INSERT INTO sessions VALUES ($1, $2)", token, id)
+		DB.Exec("INSERT INTO sessions (token, userid) VALUES ($1, $2)", token, id)
 	}
 
 	log.Println("Saved user sessions")
