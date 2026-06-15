@@ -9,7 +9,7 @@
     <image>
       <url>{{ .FeedImageURL }}</url>
       <title>{{ .Title }}</title>
-      <link>{{ .URL }}<link>
+      <link>{{ .URL }}</link>
     </image>
     <ttl>30</ttl>
     {{ range .Items }}
