@@ -17,7 +17,7 @@
         <title>{{ .Title }}</title>
         <author>{{ .Author }}</author>
         <link>{{ .URL }}</link>
-        <description>{{ .Body }}</description>
+        <description><![CDATA[{{ .Body }}]]></description>
         <pubDate>{{ .Date }}</pubDate>
         <guid>{{ .ID }}</guid>
       </item>

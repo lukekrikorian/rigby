@@ -2,9 +2,10 @@ package rss
 
 import (
 	"fmt"
-	"html/template"
+	"html"
 	"log"
 	"net/http"
+	"text/template"
 	"time"
 
 	"site/config"
@@ -57,8 +58,8 @@ func RecentPostsRSS(w http.ResponseWriter, r *http.Request) {
 
 		item := Item{
 			ID:     post.ID,
-			Title:  post.Title,
-			Author: post.Author,
+			Title:  html.EscapeString(post.Title),
+			Author: html.EscapeString(post.Author),
 			URL:    fmt.Sprintf("%s/post/%s", config.Config.RSS.BaseURL, post.ID),
 			Body:   string(body),
 			Date:   post.Created,
