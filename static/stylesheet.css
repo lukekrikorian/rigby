@@ -110,7 +110,7 @@ code {
 }
 
 /* Comments and Replies */
-.reply {
+.reply, .replyform {
 	margin: 1ch 0px 1ch 3ch;
 }
 

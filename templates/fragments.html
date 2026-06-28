@@ -21,7 +21,7 @@
 
 {{ define "replyForm" -}}
 <details class="replyform">
-	<summary>new reply</summary>
+	<summary>reply</summary>
 	<form method="POST" action="/api/replies">
 		<input type="hidden" name="parentid" value="{{ .ID }}"/>
 		<textarea name="body" minlength="3" maxlength="1000" placeholder="Actually..."></textarea>
