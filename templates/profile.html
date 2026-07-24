@@ -6,9 +6,8 @@
 		{{ template "header" }}
 		<div class="centerWrap">
 			<div class="center">
-				<h2>{{ .Username }}</h2>
-				<p id="dateJoined" style="margin-top: 5px">joined on {{ prettyTime .Created }}</p>
-				{{ if .Posts }}<h3>Posts</h3>{{- end -}}
+        <h2>{{ .Username }}</h2>
+        joined {{ prettyTime .Created }}
 				{{ range .Posts }}
 				<p class="linkList"><span class="dark">↑{{ .VoteCount }} </span>{{ template "postlink" . }}</a></p>
 				{{ end }}

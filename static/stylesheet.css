@@ -1,11 +1,22 @@
+html { -webkit-text-size-adjust: 100%; }
 * {
     box-sizing: border-box;
+    box-shadow: none;
+    border: none;
+    outline: none;
+    background: none;
     margin: 0;
+    padding: 0;
+    font-size: 0.91rem !important;
+    font-weight: normal !important;
+    font-family: monospace; 
+    line-height: 1.5em !important;
 }
 
 body {
-	font-family: monospace;
 	background: #f7f6e8;
+  width: round(down, min(98%, 90ch), 1ch);
+  padding-left: 1ch;
 }
 
 /* Header */
@@ -13,7 +24,7 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 5px;
+	height: 1lh;
 	width: 100%;
 	overflow: hidden;
 	background: #662113;
@@ -21,37 +32,42 @@ body {
 
 #headerLink {
 	display: block;
-	margin: 10px;
-	font-size: 1.2em;
+	margin: 2lh 0ch 1lh 0ch;
 	color: #662113;
 	font-weight: bold;
 	text-decoration: none;
+  color: transparent;
+  text-shadow: 0 0 0 #662113;
+}
+
+#emoji {
+  display: inline-block;
+  width: 2ch;
+  overflow: hidden;
+  vertical-align: middle;
 }
 
 /* Generic Elements */
-form > label {
-	vertical-align: 4px;
+[type=submit] {
+  color: blue;
 }
 
-form > input[type=text], form > input[type=password] {
-	margin-bottom: 5px;
-	border: 1px solid darkgray;
-	padding: 4px;
-	border-radius: 2px;
-	box-shadow: none;
+[type=submit]:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-form > textarea {
-	width: 24em;
-	height: 14em;
-	margin-bottom: 3px;
-	padding: 5px;
-	max-width: 700px;
-	font-family: monospace;
+[type=text], [type=password], textarea {
+  /* background: color(srgb 0.935 0.9212 0.8041); */
+  border-right: 1ch solid gray !important;
+  min-width: 24ch;
+  width: 100%;
 }
 
-form > input[type=submit] {
-	margin-top: 5px;
+textarea {
+  resize: vertical;
+  width: 100%;
+	height: 6lh;
 }
 
 pre {
@@ -66,84 +82,43 @@ a:hover {
 	text-decoration: underline;
 }
 
-h2, h3 {
-	margin-bottom: 5px;
-}
-
 code {
 	color: #662113;
 }
 
-.center {
-	display: inline-block;
-	max-width: 700px;
-	text-align: left;
-}
-
-.centerWrap {
-	text-align: center;
-	margin: 0px 10px 0px 10px;
-}
-
-/* Generic class stylings */
-.dark {
-	color: #2F2F2F;
-}
-
-.inline {
-	display: inline;
-}
-
-#voteButton {
-	display: inline;
-	float: right;
-	background: none;
-	border: none;
-	font-family: monospace;
-	font-size: 1em;
-	color: blue;
-	cursor: pointer;
-}
-
-#voteButton:hover {
-	text-decoration: underline;
-}
-
 /* Comments and Replies */
-.reply, .replyform {
-	margin: 1ch 0px 1ch 3ch;
+.reply {
+	margin: 0lh 0 0lh 2ch;
+}
+
+.reply + reply {
+  margin-top: 1lh;
+}
+
+.reply + .replyForm {
+  margin-left: 2ch;
 }
 
 .comment {
-	margin: 0px 0px 2ch 0px;
+	margin-bottom: 1lh;
 }
 
-.target:target {
-	border-left: solid 3px #662113;
-	padding-left: 5px;
+.target:target::before {
+  content: '↘';
+  display: block;
 }
 
-#commentsHeader, .comments {
-	margin-top: 2ch;
-}
-
-.comments {
-	margin-top: 1ch;
-}
-
-/* Misc */
-#indexDescription {
-	margin-top: 5px;
-	margin-bottom: 5px;
+#commentsHeader {
+	margin-top: 1lh;
 }
 
 #authorLink {
-	margin-right: 10px;
-	margin-bottom: 0px;
+  flex: 1;
 }
 
 .linkList {
-	margin: 6px;
+	display: flex;
+	gap: 1ch;
 }
 
 .gamerRage {
@@ -151,34 +126,49 @@ code {
 }
 
 .postBody {
-	margin-top: 1ch;
+	margin-top: 1lh;
 }
 
 .postBody * {
 	margin: revert;
 }
 
+.postBody p {
+  margin-bottom: 1lh;
+}
+
+#postTitle {
+  flex: 1;
+}
+
+.authorAndVotes {
+  display: flex;
+}
+
 #failure {
 	text-align: center;
-	font-size: 1rem;
 }
 
 summary {
 	color: blue;
-	outline: none;
-	margin-bottom: 5px;
+	list-style: none;
 }
 
 summary:hover {
-	cursor: pointer;
-}
-
-details > summary {
-	list-style: none;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 details > summary::-webkit-details-marker {
 	display: none;
+}
+
+details[open] > summary {
+  color: revert;
+}
+
+details[open] > summary::after {
+  content: ' ↓';
 }
 
 @keyframes shake {
@@ -194,4 +184,5 @@ details > summary::-webkit-details-marker {
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
+
 

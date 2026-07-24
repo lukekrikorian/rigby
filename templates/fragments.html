@@ -20,13 +20,13 @@
 {{- end }}
 
 {{ define "replyForm" -}}
-<details class="replyform">
+<details class="replyForm">
 	<summary>reply</summary>
 	<form method="POST" action="/api/replies">
 		<input type="hidden" name="parentid" value="{{ .ID }}"/>
 		<textarea name="body" minlength="3" maxlength="1000" placeholder="Actually..."></textarea>
 		<br>
-		<input type="submit" value="Reply"/>
+		<input type="submit" value="submit reply"/>
 	</form>
 </details>
 {{- end }}

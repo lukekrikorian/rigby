@@ -4,28 +4,26 @@
 	{{ template "head" "rigby" }}
 	<body>
 		{{ template "header" . }}
-		<div class="centerWrap">
-			<div class="center">
-				{{ if .Username }} 
-				<h2>Hello, {{ .Username }}</h3>
-				<a href="/newpost">make a post</a>
-				<br>
-				<a href="~{{ .Username }}">your profile</a>
-				<br>
-				<a href="/browse/recent">recent posts</a>
-				<br>
-				<a href="/browse/popular">popular posts</a>
-				<br>
-				<a href="/conversation">recent conversation</a>
-				<br>
-				<a href="/logout">logout</a>
-				{{ else }}
-				<h2>Rigby</h2>
-				<p id="indexDescription">a site where cool cats can discuss</p>
-				<p style="margin-top: 0px"><a href="/signup">Sign up</a> or <a href="/login">Log in</a> or <a href="/browse/recent">Browse recent posts</a></p>
-				{{ end }}
-			</div>
-		</div>
-	</body>
+      {{ if .Username }} 
+      <p class="noHash">Hello, {{ .Username }}…</p>
+      you can <a href="/newpost">make a post</a>;
+      <br>
+      <br>
+      or browse:<br>
+      <a href="~{{ .Username }}">your profile</a>,
+      <br>
+      <a href="/browse/recent">recent posts</a>,
+      <br>
+      <a href="/browse/popular">popular posts</a>,
+      <br>
+      or even <a href="/conversation">recent conversation</a>.
+      <br><br>
+      Otherwise,<br>
+      <a href="/logout">log out</a>?
+      {{ else }}
+      <p id="indexDescription">a site where cool cats can discuss</p>
+      <p><a href="/signup">Sign up</a> or <a href="/login">Log in</a> or <a href="/browse/recent">Browse recent posts</a></p>
+      {{ end }}
+    </div>
 </html>
 {{ end }}

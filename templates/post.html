@@ -4,31 +4,28 @@
 	{{ template "head" .Title }}
 	<body>
 		{{ template "header" . }}
-		<div class="centerWrap">
-			<div class="center {{ if .GamerRage -}} gamerRage {{- end }}">
-				<h3>{{ .Title }}</h3>
-				<p class="inline" id="authorLink">By {{ template "userAndDate" . }}</p>
-				<form class="inline" method="POST" action="/api/vote/{{ .ID }}">
-					<button type="submit" id="voteButton" title="{{ .GetVoterList }}">{{ .VoteCount }} {{ if eq .VoteCount 1 }}vote{{ else }}votes{{ end }}</button>
-				</form>
+			<div class="{{ if .GamerRage -}} gamerRage {{- end }}">
+        <div class="authorAndVotes">
+          <h3 id="postTitle">{{ .Title }}</h3>
+          <form method="POST" action="/api/vote/{{ .ID }}">
+            <button type="submit" id="voteButton" title="{{ .GetVoterList }}">&nbsp;{{ .VoteCount }} {{ if eq .VoteCount 1 }}vote{{ else }}votes{{ end }}</button>
+          </form>
+        </div>
+        <p id="authorLink">{{ template "userAndDate" . }}</p>
 				<div class="postBody">{{ markdown .Body }}</div>
-				{{ if .Comments }}<p id="commentsHeader"><b>Comments</b></p>{{- end }}
 				<div class="comments">
 				{{ range .Comments }}
 					{{ template "comment" . }}
 				{{ end }}
-				<details style="margin-top: 8px">
-					<summary>comment</summary>
+				<details>
+					<summary>add comment</summary>
 					<form method="POST" action="/api/comments">
 						<input type="hidden" name="postid" value="{{ .ID }}"/>
 						<textarea name="body" placeholder="However..."></textarea>
-						<br>
-						<input type="submit" value="Comment"/>
+						<input type="submit" value="submit comment"/>
 					</form>
 				</details>
 				</div>
-			</div>
-		</div>
 	</body>
 </html>
 {{ end }}

@@ -5,12 +5,12 @@
 		{{ template "header" }}
 		<div class="centerWrap">
 			<div class="center">
-				<h2>Browsin</h2>
+				<h2>Browsing</h2>
 				{{ range . }}
 				<p class="linkList">
 					<span class="dark">↑{{ .VoteCount }} </span>
-					{{ template "postlink" . }} by 
-					{{ template "userlink" .Author }}
+					<span>{{ template "postlink" . }} by
+					{{ template "userlink" .Author }}</span>
 				</p>
 				{{ end }}
 			</div>

@@ -1,17 +1,13 @@
 {{ define "conversation" }}
 <!DOCTYPE html>
 <html>
-	{{ template "head" "People Talkin" }}
+	{{ template "head" "Discussion" }}
 	<body>
 		{{ template "header" }}
-		<div class="centerWrap">
-				<div class="center">
-					<h2>People Talkin</h2>
-					{{ range . }}
-						{{ template "comment" . }}
-					{{ end }}
-				</div>
-			</div>
+    <h2>Discussion</h2>
+    {{ range . }}
+      {{ template "comment" . }}
+    {{ end }}
 	</body>
 </html>
 {{ end }}
